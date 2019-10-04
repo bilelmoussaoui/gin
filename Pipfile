@@ -1,6 +1,6 @@
 [[source]]
-name = "pypi"
-url = "https://pypi.org/simple"
+name = "gin"
+url = "https://github.com/bilelmoussaoui/Gin"
 verify_ssl = true
 
 [dev-packages]
@@ -14,3 +14,8 @@ fire = "*"
 
 [requires]
 python_version = "3.7"
+
+[scripts]
+tests = "pytest"
+build = "python3 setup.py build"
+install = "python3 setup.py install"
