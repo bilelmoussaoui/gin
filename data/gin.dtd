@@ -1,0 +1,95 @@
+<!-- Gin format definition                      -->
+<!-- © 2019 Zander Brown <zbrown@gnome.org>     -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later  -->
+
+<!-- The root element needs a some basic info and _a_ dependency -->
+<!ELEMENT gin (name, manufacturer, version, (meson|autotools|script)) >
+<!ATTLIST gin
+   id     CDATA          #REQUIRED
+>
+
+<!-- Metadata -->
+<!ELEMENT name ( #PCDATA ) >
+<!ELEMENT manufacturer ( #PCDATA ) >
+<!ELEMENT version ( #PCDATA ) >
+
+<!-- Cleanups -->
+<!ELEMENT cleanups (dir*, file*) >
+
+<!ELEMENT dir EMPTY >
+<!ATTLIST dir
+   path     CDATA          #REQUIRED
+>
+
+<!ELEMENT file EMPTY >
+<!ATTLIST file
+   path     CDATA          #REQUIRED
+>
+
+<!-- Exports -->
+<!ELEMENT exports (shortcut*) >
+
+<!ELEMENT shortcut ( #PCDATA ) >
+<!ATTLIST shortcut
+   icon     CDATA         #IMPLIED
+>
+
+<!-- Git source -->
+<!ELEMENT git (patch*) >
+<!ATTLIST git
+   url     CDATA          #REQUIRED
+   commit  CDATA          #IMPLIED
+   tag     CDATA          #IMPLIED
+   branch  CDATA          #IMPLIED
+>
+
+<!-- Archive source -->
+<!ELEMENT archive (patch*) >
+<!ATTLIST archive
+   url     CDATA          #REQUIRED
+   sha-256 CDATA          #IMPLIED
+>
+
+<!-- Patch to apply to (git|archive) -->
+<!ELEMENT patch EMPTY >
+<!ATTLIST patch
+   path    CDATA          #REQUIRED
+>
+
+<!-- Dependencies -->
+<!ELEMENT dependencies (system*, meson*, autotools*, script*) >
+
+<!-- Configure flag -->
+<!ELEMENT flag ( #PCDATA ) >
+<!ATTLIST flag
+   name    CDATA          #REQUIRED
+>
+
+<!-- MSYS package -->
+<!ELEMENT system (cleanups*) >
+<!ATTLIST system
+   name       ID           #REQUIRED
+   build-only (true|false) "false"
+>
+
+<!-- Meson project -->
+<!ELEMENT meson ((git|archive), cleanups*, exports*, dependencies*, flag*) >
+<!ATTLIST meson
+   name       ID           #REQUIRED
+   build-only (true|false) "false"
+>
+
+<!-- Autotools project -->
+<!ELEMENT autotools ((git|archive), cleanups*, exports*, dependencies*, flag*) >
+<!ATTLIST autotools
+   name       ID           #REQUIRED
+   build-only (true|false) "false"
+>
+
+<!-- Manual script -->
+<!ELEMENT script ((git|archive), cleanups*, exports*, dependencies*) >
+<!ATTLIST script
+   name       ID           #REQUIRED
+   build-only (true|false) "false"
+   path       CDATA        #REQUIRED
+>
