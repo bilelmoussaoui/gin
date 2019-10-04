@@ -1,5 +1,5 @@
 [[source]]
-name = "gin"
+name = "pypi"
 url = "https://pypi.org/simple"
 verify_ssl = true
 
@@ -14,7 +14,7 @@ autopep8 = "*"
 fire = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.5"
 
 [scripts]
 tests = "pytest tests/"
