@@ -7,5 +7,6 @@ tests:
   script:
     - dnf install -y pipenv
     - pipenv install --ignore-pipfile
+    - pipenv shell
     - flake8 --show-source src/ tests/
     - pytest tests/
