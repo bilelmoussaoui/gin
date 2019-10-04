@@ -1,0 +1,10 @@
+stages:
+  - check
+
+flake8:
+  stage: check
+  image: 'fedora:latest'
+  script:
+    - dnf install -y python3-flake8
+    - flake8 --show-source src/ --exclude __init__.py
+    - flake8 --show-source tests/ --exclude __init__.py
