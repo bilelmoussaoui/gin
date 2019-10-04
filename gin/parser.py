@@ -18,27 +18,19 @@ class Parser:
         try:
             elem = ElementTree()
             self._tree = elem.parse(self._path)
-        except ElementTreeParseError:
+            assert self._tree.tag == 'gin'
+            assert 'id' in self._tree.attrib.keys()
+        except (ElementTreeParseError, AssertionError):
             raise ParseError("Failed to parse the manifest")
 
     def get_project(self) -> Project:
-        #    project_id =
-        root = self._tree
-
-        assert root.tag == 'gin'
-        assert 'id' in root.attrib.keys()
-
-        for child in root:
-            if child.tag == "name":
-                name = child.text
-                print(name)
-            elif child.tag == "version":
-                version = child.text
-            elif child.tag == "manufacturer":
-                manufacturer = child.text
+        _id = self._tree.get('id')
+        name = self._tree.find('name').text
+        version = self._tree.find('version').text
+        manufacturer = self._tree.find('manufacturer').text
 
         project = Project(
-            id=root.attrib['id'],
+            id=_id,
             name=name, version=version,
             manufacturer=manufacturer
         )
