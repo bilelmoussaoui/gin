@@ -1,1 +1,1 @@
-# from .dependency import Dependency
+from .dependency import Dependency
