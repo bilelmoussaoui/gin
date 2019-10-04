@@ -1,5 +1,7 @@
 # Gin
 
+![logo](logo.png)
+
 Gin is a Windows Installer creator.
 
 
