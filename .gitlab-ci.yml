@@ -1,11 +1,11 @@
 stages:
-  - check
+  - test
 
-flake8:
-  stage: check
+tests:
+  stage: test
   image: 'fedora:latest'
   script:
-    - dnf install -y python3-pipenv
+    - dnf install -y pipenv
     - pipenv install --ignore-pipfile
     - flake8 --show-source src/ tests/
     - pytest tests/
