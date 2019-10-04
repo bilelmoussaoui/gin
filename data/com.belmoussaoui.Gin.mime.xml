@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="text/x-gin+xml">
+    <comment>Gin Definition</comment>
+    <glob pattern="*.gin.xml"/>
+    <sub-class-of type="application/xml"/>
+    <icon name="com.belmoussaoui.Gin"/>
+  </mime-type>
+</mime-info>
