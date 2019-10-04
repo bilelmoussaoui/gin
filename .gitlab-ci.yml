@@ -5,6 +5,7 @@ flake8:
   stage: check
   image: 'fedora:latest'
   script:
-    - dnf install -y python3-flake8
-    - flake8 --show-source src/ --exclude __init__.py
-    - flake8 --show-source tests/ --exclude __init__.py
+    - dnf install -y python3-pipenv
+    - pipenv install --ignore-pipfile
+    - flake8 --show-source src/ tests/
+    - pytest tests/
