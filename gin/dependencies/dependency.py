@@ -1,4 +1,6 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
+
+
 class DependencyType:
     SYSTEM = "system"
     MESON = "meson"

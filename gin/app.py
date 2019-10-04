@@ -3,9 +3,12 @@ from pathlib import Path
 
 from gin.errors import ManifestNotFound, ParseError
 from gin.parser import Parser
+from gin.project import Project
+
 
 class Gin:
     _manifest: Path
+    _project: Project
 
     def __init__(self):
         pass
@@ -13,6 +16,7 @@ class Gin:
     def _parse(self):
         try:
             parser = Parser(self._manifest)
+            self._project = parser.get_project()
         except ParseError:
             print("Failed to parse the manifest")
 
@@ -22,4 +26,3 @@ class Gin:
             raise ManifestNotFound(f"Manifest {manifest} not found")
         self._manifest = Path(manifest)
         self._parse()
-

@@ -6,6 +6,7 @@ from xml.etree.ElementTree import ElementTree
 from xml.etree.ElementTree import ParseError as ElementTreeParseError
 
 from gin.errors import ParseError
+from gin.project import Project
 
 
 class Parser:
@@ -20,3 +21,6 @@ class Parser:
             print(self._tree)
         except ElementTreeParseError:
             raise ParseError("Failed to parse the manifest")
+
+    def get_project(self) -> Project:
+        pass

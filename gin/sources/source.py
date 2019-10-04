@@ -1,4 +1,4 @@
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
 
 class SourceType:
@@ -7,6 +7,7 @@ class SourceType:
     FILE = "file"
     PATCH = "patch"
     GIT = "git"
+
 
 class Source(metaclass=ABCMeta):
     """ Source

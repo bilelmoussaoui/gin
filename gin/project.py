@@ -1,7 +1,6 @@
 from gin.dependencies import Dependency
 
 
-
 class Project:
 
     _id: str

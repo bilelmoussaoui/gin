@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "b8777565c75a129af5474cf8cb31d5edc34d7ebfab48f02adcc299d16f4c42ba"
+            "sha256": "9efad1067d532406bec892ac7268684b1ffe78c7cb4d2d818fa943d444f5035d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -9,7 +9,7 @@
         },
         "sources": [
             {
-                "name": "pypi",
+                "name": "gin",
                 "url": "https://pypi.org/simple",
                 "verify_ssl": true
             }
@@ -51,6 +51,13 @@
                 "sha256:f913492e1663d3c36f502e5e9ba6cd13cf19d7fab50aa13239e420fef95e1396"
             ],
             "version": "==19.2.0"
+        },
+        "autopep8": {
+            "hashes": [
+                "sha256:4d8eec30cc81bc5617dbf1218201d770dc35629363547f17577c61683ccfb3ee"
+            ],
+            "index": "pypi",
+            "version": "==1.4.4"
         },
         "certifi": {
             "hashes": [

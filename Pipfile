@@ -1,6 +1,6 @@
 [[source]]
 name = "gin"
-url = "https://github.com/bilelmoussaoui/Gin"
+url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
@@ -8,6 +8,7 @@ pytest = "*"
 flake8 = "*"
 pipenv = "*"
 setuptools = "*"
+autopep8 = "*"
 
 [packages]
 fire = "*"
@@ -16,6 +17,8 @@ fire = "*"
 python_version = "3.7"
 
 [scripts]
-tests = "pytest"
+tests = "pytest tests/"
 build = "python3 setup.py build"
 install = "python3 setup.py install"
+lint = "autopep8 --in-place --recursive ."
+flake8 = "flake8 --show-source gin/ tests/"
