@@ -28,6 +28,10 @@
             </cleanup>
             <build system="meson">
             </build>
+            <export type="shortcut">
+                <bin>palette</bin>
+                <icon>data/icons/launcher.svg</icon>
+            </export>
         </main>
     </dependencies>
     
