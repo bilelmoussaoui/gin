@@ -1,4 +1,4 @@
 from .dependency import Dependency
 
-class SystemDependency(Dependency):
+class AutoToolsDependency(Dependency):
     pass
