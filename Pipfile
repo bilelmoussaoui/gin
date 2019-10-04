@@ -13,9 +13,6 @@ autopep8 = "*"
 [packages]
 fire = "*"
 
-[requires]
-python_version = "3.5"
-
 [scripts]
 tests = "pytest tests/"
 build = "python3 setup.py build"
