@@ -1,4 +1,4 @@
-from .dependencies import Dependency
+from gin.dependencies import Dependency
 
 
 
