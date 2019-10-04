@@ -1,0 +1,56 @@
+<?xml version="1.0" ?>
+
+<gin id="com.belmoussaoui.GinTest">
+  <!-- name/manufacturer supports xml:lang for translation -->
+  <name></name>
+  <manufacturer>GNOME</manufacturer>
+  <version>3.6</version>
+  <!-- must have name for PKGBUILD name etc -->
+  <meson name="gin-test">
+    <!-- Not needed, we can build from the current dir as well -->
+    <git commit="" url="">
+
+    <!-- Things to remove before bundling -->
+    <cleanup>
+      <dir path="$prefix/$datadir/applications">
+    </cleanup>
+
+    <exports>
+      <shortcut icon="data/icons/launcher.svg">palette</shortcut>
+    </exports>
+
+    <dependencies>
+      <!-- something from the msys2 repos -->
+      <system name="gtk3" />
+
+      <!-- build-only deps are removed completely from the bundle -->
+      <system name="gcc" build-only />
+
+      <!-- supports XInclude to declare deps (or fragments) in different files -->
+      <xi:include href="big-dep.xml" />
+
+      <meson name="something">
+        <!-- all non-system deps must have _a_ source -->
+        <git url="" commit="" branch="" />
+        <flag name="docs">false</flag>
+      </meson>
+
+      <meson name="patched-something">
+        <!-- all non-system deps must have _a_ source -->
+        <git url="" commit="" branch="">
+          <!-- a patch to apply to the source -->
+          <patch path="fix-thing.patch" />
+        </git>
+      </meson>
+
+      <autotools="otherthing">
+        <archive url="" sha-256="" />
+
+        <cleanup>
+          <dir path="$prefix/$datadir/docs" />
+          <file path="$prefix/$bindir/gtk3-demo.exe">
+        </cleanup>
+      </autotools>
+    </dependencies>
+  </meson>
+</gin>
