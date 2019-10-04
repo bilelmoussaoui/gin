@@ -8,11 +8,11 @@
   <!-- must have name for PKGBUILD name etc -->
   <meson name="gin-test">
     <!-- Not needed, we can build from the current dir as well -->
-    <git commit="" url="">
+    <git commit="" url="" />
 
     <!-- Things to remove before bundling -->
     <cleanup>
-      <dir path="$prefix/$datadir/applications">
+      <dir path="$prefix/$datadir/applications" />
     </cleanup>
 
     <exports>
@@ -24,10 +24,10 @@
       <system name="gtk3" />
 
       <!-- build-only deps are removed completely from the bundle -->
-      <system name="gcc" build-only />
+      <system name="gcc" build-only="true" />
 
       <!-- supports XInclude to declare deps (or fragments) in different files -->
-      <xi:include href="big-dep.xml" />
+      <!-- <xi:include href="big-dep.xml" /> -->
 
       <meson name="something">
         <!-- all non-system deps must have _a_ source -->
@@ -43,12 +43,12 @@
         </git>
       </meson>
 
-      <autotools="otherthing">
+      <autotools name="otherthing">
         <archive url="" sha-256="" />
 
         <cleanup>
           <dir path="$prefix/$datadir/docs" />
-          <file path="$prefix/$bindir/gtk3-demo.exe">
+          <file path="$prefix/$bindir/gtk3-demo.exe" />
         </cleanup>
       </autotools>
     </dependencies>
