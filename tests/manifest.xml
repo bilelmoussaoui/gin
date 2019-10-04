@@ -1,0 +1,35 @@
+<gin>
+    <id></id>
+    <name></name>
+    <manufacturer>GNOME</manufacturer>
+    <version>3.6</version>
+    <dependencies>
+        <dependency type="system" name="gtk3" />
+        <dependency type="git">
+            <url></url>
+            <commit></commit>
+            <branch></branch>
+            <build system="meson">
+                <flag name="docs">false</flag>
+            </build>
+        </dependecy>
+        <dependency type="archive">
+            <url></url>
+            <sha256></sha256>
+            <cleanup>
+                <dir path="$prefix/$datadir/docs" />
+                <file path="$prefix/$bindir/gtk3-demo.exe">
+            </cleanup>
+        </dependency>
+        <main>
+            <commit></commit> <!-- Not needed, we can build from the current dir as well -->
+            <cleanup>
+                <dir path="$prefix/$datadir/applications">
+            </cleanup>
+            <build system="meson">
+            </build>
+        </main>
+    </dependencies>
+    
+
+</gin>
