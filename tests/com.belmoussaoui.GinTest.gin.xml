@@ -11,9 +11,9 @@
     <git commit="" url="" />
 
     <!-- Things to remove before bundling -->
-    <cleanup>
+    <cleanups>
       <dir path="$prefix/$datadir/applications" />
-    </cleanup>
+    </cleanups>
 
     <exports>
       <shortcut icon="data/icons/launcher.svg">palette</shortcut>
@@ -37,7 +37,7 @@
 
       <meson name="patched-something">
         <!-- all non-system deps must have _a_ source -->
-        <git url="" commit="" branch="">
+        <git url="">
           <!-- a patch to apply to the source -->
           <patch path="fix-thing.patch" />
         </git>
@@ -46,10 +46,10 @@
       <autotools name="otherthing">
         <archive url="" sha-256="" />
 
-        <cleanup>
+        <cleanups>
           <dir path="$prefix/$datadir/docs" />
           <file path="$prefix/$bindir/gtk3-demo.exe" />
-        </cleanup>
+        </cleanups>
       </autotools>
     </dependencies>
   </meson>
