@@ -2,25 +2,35 @@ name: Python package
 
 on: [push, pull_request]
 
+
 jobs:
   build:
+
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 3
+      max-parallel: 4
       matrix:
-        python-version: [3.5, 3.6, 3.7]
-  steps:
+        python-version: [2.7, 3.5, 3.6, 3.7]
+
+    steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v1
       with:
         python-version: ${{ matrix.python-version }}
+
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pipenv
         pipenv install --ignore-pipfile
+
+    - name: Lint with flake8
+      run: |
         pipenv run flake8 --show-source src/ tests/
+
+    - name: Test with pytest
+      run: |
         pipenv run python3 setup.py install # needed to run tests
         pipenv run pytest tests/
 

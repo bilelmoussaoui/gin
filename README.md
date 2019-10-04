@@ -1,3 +1,3 @@
 # Gin
 
-GNOME Windows Installer
+Gin is a Windows Installer creator.
