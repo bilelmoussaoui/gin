@@ -9,3 +9,4 @@ class Project:
     manufacturer: str
     version: str
     dependencies: list[Dependency]
+    module: Dependency

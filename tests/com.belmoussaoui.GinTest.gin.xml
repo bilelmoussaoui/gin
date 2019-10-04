@@ -2,7 +2,7 @@
 
 <gin id="com.belmoussaoui.GinTest">
   <!-- name/manufacturer supports xml:lang for translation -->
-  <name></name>
+  <name>GinTest</name>
   <manufacturer>GNOME</manufacturer>
   <version>3.6</version>
   <!-- must have name for PKGBUILD name etc -->

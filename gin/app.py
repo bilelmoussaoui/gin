@@ -1,6 +1,4 @@
 #!/usr/bin/env python
-
-import fire
 from pathlib import Path
 
 from gin.errors import ManifestNotFound, ParseError
@@ -25,6 +23,3 @@ class Gin:
         self._manifest = Path(manifest)
         self._parse()
 
-
-if __name__ == "__main__":
-    fire.Fire(Gin)

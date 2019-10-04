@@ -3,6 +3,7 @@
 """
 from pathlib import Path
 from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import ParseError as ElementTreeParseError
 
 from gin.errors import ParseError
 
@@ -16,6 +17,6 @@ class Parser:
         try:
             elem = ElementTree()
             self._tree = elem.parse(self._path)
-        except Exception as e:
-            print(e)
+            print(self._tree)
+        except ElementTreeParseError:
             raise ParseError("Failed to parse the manifest")
