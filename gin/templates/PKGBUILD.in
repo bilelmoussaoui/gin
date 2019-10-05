@@ -27,19 +27,42 @@ makedepends=(
 )
 
 options=("strip" "staticlibs")
-source=("$_pkgname::git+@GIT_REPO@#branch=@GIT_BRANCH@")
-sha256sums=("SKIP")
+
+source=(
+  {% for source in dependency.get_sources() %}
+    "{{ source }}"
+  {% endfor %}
+)
+sha256sums=(
+  {% for source in dependency.get_sources() %}
+    {% if source.get_type() == "archive" %}
+      "{{source.sha256}}"
+    {% else %}
+      "SKIP"
+    {% endif %}
+  {% endfor %}
+)
 
 
 pkgver() {
   cd "$srcdir/$_pkgname"
-  git describe --long --tags | sed "s/\([^-]*-g\)/r\1/;s/-/./g"
+
+  {% if dependency.get_main_source() and dependency.get_main_source().get_type() == "git" %}
+    git describe --long --tags | sed "s/\([^-]*-g\)/r\1/;s/-/./g"
+  {% endif %}
 }
 
 prepare() {
   cd "$srcdir/$_pkgname"
-  git submodule update --init
-  meson build --prefix="${MINGW_PREFIX}"
+  {% if dependency.get_main_source() and dependency.get_main_source().get_type() == "git" %}
+    git submodule update --init
+  {% endif %}
+
+  {% if dependency.get_type() == 'meson' %}
+    meson build --prefix="${MINGW_PREFIX}"
+  {% elif dependency.get_type() == 'cmake' %}
+  {% elif dependency.get_type() == 'autotools' %}
+  {% endif %}
 }
 
 build() {

@@ -56,3 +56,6 @@ class Source(metaclass=ABCMeta):
 
     def display(self):
         print(f"Source type: {self._type}")
+
+    def get_type(self):
+        return self._type

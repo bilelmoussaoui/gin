@@ -5,8 +5,7 @@ import os
 
 from gin.template import template_env
 from gin.sources import Source
-from gin.errors import (UnsupportedDependency, DependenciesNotSupported,
-                        ParseError)
+from gin.errors import UnsupportedDependency, ParseError
 from .helper import find_dependencies, find_sources
 
 
@@ -64,6 +63,7 @@ class Dependency(metaclass=ABCMeta):
         self._tree = dependency_tag
         self.name = dependency_tag.get("name")
         self.build_only = dependency_tag.get("build-only") == "true"
+        self._dependencies = []
         self._fetch_sources()
 
     @property
@@ -85,16 +85,17 @@ class Dependency(metaclass=ABCMeta):
         with open(os.path.join(pkgbuild_output, "PKGBUILD"), 'w') as pkg_obj:
             pkg_obj.write(pkgbuild_content)
 
-        if self._is_main:
-            map(lambda dep: dep.generate_pkgbuild(output_dir),
-                self.get_dependencies())
+        if self.is_main:
+            for dependency in self.get_dependencies():
+                if dependency.get_type() != DependencyType.SYSTEM:
+                    dependency.generate_pkgbuild(output_dir)
 
     def get_dependencies(self):
-        if not self.is_main:
-            raise DependenciesNotSupported(
-                "Non-main module doesn't support sub-dependencies")
-
         return self._dependencies
+
+    def get_main_source(self):
+        if self.is_main:  # Main module source
+            return self._sources[0]
 
     def get_sources(self):
         if self._type == DependencyType.SYSTEM:
