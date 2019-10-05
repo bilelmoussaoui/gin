@@ -1,0 +1,20 @@
+name: "XML Lint"
+
+on:
+  push:
+    paths:
+    - "tests/*.gin.xml"
+  pull_request:
+    paths:
+    - "tests/*.gin.xml"
+
+jobs:
+  xmllint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Validate sample manifest with xmllint
+      run: |
+        sudo apt-get update
+        sudo apt-get install libxml2-utils -y
+        xmllint tests/com.belmoussaoui.GinTest.gin.xml --dtdvalid data/gin.dtd
