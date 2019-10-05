@@ -5,6 +5,7 @@
   <name>GinTest</name>
   <manufacturer>GNOME</manufacturer>
   <version>3.6</version>
+  <license type="GPL-3.0" />
   <!-- must have name for PKGBUILD name etc -->
   <meson name="gin-test">
     <!-- Not needed, we can build from the current dir as well -->
