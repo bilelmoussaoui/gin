@@ -1,0 +1,86 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #deddda;
+}
+
+header {
+    background: #26a269;
+    box-shadow: 0 0 .5rem black;
+    text-shadow: 0 0 2px white;
+    height: 3rem;
+    line-height: 3rem;
+    font-size: 2rem;
+    padding: 0 .5rem;
+}
+
+.banner-wrap {
+    max-width: 500px;
+    width: 100%;
+    margin: 1rem auto;
+}
+
+.banner {
+    background: #8ff0a4;
+    border-radius: .5rem;
+    border: 1px solid #57e389;
+    box-shadow: 0 0 2px black;
+    margin: 1rem;
+    padding: .5rem;
+}
+
+.banner img {
+    width: 48px;
+    float: left;
+    filter: drop-shadow(0 1px 2px black);
+}
+
+.reference {
+    max-width: 800px;
+    width: 100%;
+    margin: 1rem auto;
+}
+
+.element {
+    margin: .5rem;
+    padding: .5rem;
+    background: white;
+    border-radius: .25rem;
+    border: 1px solid #9a9996;
+    box-shadow: 0 1px 2px #c0bfbc;
+}
+
+.element > code {
+    font-size: 1.5rem;
+}
+
+.element > code::before, .valid-in > code::before {
+    content: "<";
+}
+
+.element > code::after, .valid-in > code::after {
+    content: ">";
+}
+
+.element p, .attrs {
+    margin: 1rem 0;
+}
+
+.attrs table {
+    width: 100%;
+}
+
+.attrs th {
+    width: 85px;
+    text-align: left;
+}
+
+.attrs td:nth-child(3), .required-elm {
+    color: red;
+    font-style: italic;
+    text-align: right;
+}
+
+.attrs td:nth-child(3)::before, .required-elm::before {
+    content: '—';
+}

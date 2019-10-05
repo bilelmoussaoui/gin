@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gin</title>
+    <link rel="stylesheet" type="text/css" href="styles.css" />
+  </head>
+  <body>
+    <header>Gin</header>
+    <div class="banner-wrap">
+      <div class="banner">
+        <img src="com.belmoussaoui.Gin.svg">
+        <p>Windows Installer creator</p>
+      </div>
+    </div>
+    <div class="reference">
+      <div class="element" id="gin">
+        <code>gin</code><span class="required-elm">required</span>
+        <p>The root element of a gin bundle</p>
+        <p>Must contain a single dependency (<a href="#system">system</a>, <a href="#meson">meson</a>, <a href="#autotools">autotools</a>, <a href="#script">script</a>)</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>id</th>
+              <td>bundle id in <a href="https://en.wikipedia.org/wiki/Reverse_domain_name_notation">reverse-DNS</a></td>
+              <td>required</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: N/A</div>
+      </div>
+      <div class="element" id="name">
+        <code>name</code><span class="required-elm">required</span>
+        <p>The name displayed to the user in the installer and add/remove programs</p>
+        <div class="valid-in">Valid in: <code>gin</code></div>
+      </div>
+      <div class="element" id="manufacturer">
+        <code>manufacturer</code><span class="required-elm">required</span>
+        <p>The manufacturer name for add/remove programs</p>
+        <div class="valid-in">Valid in: <code>gin</code></div>
+      </div>
+      <div class="element" id="version">
+        <code>version</code><span class="required-elm">required</span>
+        <p>The version of the application bundled</p>
+        <div class="valid-in">Valid in: <code>gin</code></div>
+      </div>
+      <div class="element" id="dependencies">
+        <code>dependencies</code>
+        <p>A list of dependencies which must be built before the current dependency</p>
+        <div class="valid-in">Valid in: <code>system</code> <code>meson</code> <code>autotools</code> <code>script</code></div>
+      </div>
+      <div class="element" id="system">
+        <code>system</code><span>(dependency)</span>
+        <p>A package from the <a href="http://www.msys2.org/">msys2</a> repos</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>name</th>
+              <td>the package name without the arch prefix</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>build-only</th>
+              <td>marks the dependency as only being required whilst building the bundle</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>gin</code> <code>dependencies</code></div>
+      </div>
+      <div class="element" id="meson">
+        <code>meson</code><span>(dependency)</span>
+        <p>A dependency built with <a href="http://mesonbuild.com/">meson</a></p>
+        <p>See <a href="#flag">flag</a> for passing flags to meson</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>name</th>
+              <td>id used internally</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>build-only</th>
+              <td>marks the dependency as only being required whilst building the bundle</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>gin</code> <code>dependencies</code></div>
+      </div>
+      <div class="element" id="autotools">
+        <code>autotools</code><span>(dependency)</span>
+        <p>A dependency built with autotools</p>
+        <p>See <a href="#flag">flag</a> for passing flags to configure</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>name</th>
+              <td>id used internally</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>build-only</th>
+              <td>marks the dependency as only being required whilst building the bundle</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>gin</code> <code>dependencies</code></div>
+      </div>
+      <div class="element" id="script">
+        <code>script</code><span>(dependency)</span>
+        <p>A dependency built with a script</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>name</th>
+              <td>id used internally</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>path</th>
+              <td>the (bash) script to use</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>build-only</th>
+              <td>marks the dependency as only being required whilst building the bundle</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>gin</code> <code>dependencies</code></div>
+      </div>
+      <div class="element" id="flag">
+        <code>flag</code>
+        <p>A flag to pass to the build system (<a href="#meson">meson</a>, <a href="#autotools">autotools</a>)</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>name</th>
+              <td>the flag name</td>
+              <td>required</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>meson</code> <code>autotools</code></div>
+      </div>
+      <div class="element" id="cleanups">
+        <code>cleanups</code>
+        <p>A list of cleanups to apply after the build</p>
+        <div class="valid-in">Valid in: <code>system</code> <code>meson</code> <code>autotools</code> <code>script</code></div>
+      </div>
+      <div class="element" id="dir">
+        <code>dir</code>
+        <p>A directory to remove from the bundle</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>path</th>
+              <td>the directory to remove</td>
+              <td>required</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>cleanups</code></div>
+      </div>
+      <div class="element" id="file">
+        <code>file</code>
+        <p>A file to remove from the bundle</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>path</th>
+              <td>the file to remove</td>
+              <td>required</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>cleanups</code></div>
+      </div>
+      <div class="element" id="exports">
+        <code>exports</code>
+        <p>A list of things to export to the system</p>
+        <div class="valid-in">Valid in: <code>system</code> <code>meson</code> <code>autotools</code> <code>script</code></div>
+      </div>
+      <div class="element" id="shortcut">
+        <code>shortcut</code>
+        <p>A shortcut to install in the start menu</p>
+        <p>Shortcut name taken from <a href="#name">name</a></p>
+        <p>Contains a path to a executable</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>icon</th>
+              <td>an icon to use instead of that embedded in the target</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>exports</code></div>
+      </div>
+      <div class="element" id="git">
+        <code>git</code><span>(source)</span>
+        <p>A git repo to checkout</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>url</th>
+              <td>where the repo is</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>commit</th>
+              <td>a specific commit to use</td>
+            </tr>
+            <tr>
+              <th>tag</th>
+              <td>the tag to use</td>
+            </tr>
+            <tr>
+              <th>branch</th>
+              <td>the branch to use</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>meson</code> <code>autotools</code> <code>script</code></div>
+      </div>
+      <div class="element" id="archive">
+        <code>archive</code><span>(source)</span>
+        <p>An archive to fetch</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>url</th>
+              <td>where the archive is</td>
+              <td>required</td>
+            </tr>
+            <tr>
+              <th>sha-256</th>
+              <td>a hash to validate the archive</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>meson</code> <code>autotools</code> <code>script</code></div>
+      </div>
+      <div class="element" id="patch">
+        <code>patch</code>
+        <p>A patch file to apply to a source</p>
+        <div class="attrs">
+          <table>
+            <tr>
+              <th>path</th>
+              <td>the patch file to apply</td>
+              <td>required</td>
+            </tr>
+          </table>
+        </div>
+        <div class="valid-in">Valid in: <code>git</code> <code>archive</code></div>
+      </div>
+    </div>
+  </body>
+</html>
