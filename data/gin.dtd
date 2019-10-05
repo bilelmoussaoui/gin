@@ -61,7 +61,7 @@
 >
 
 <!-- Dependencies -->
-<!ELEMENT dependencies (system*, meson*, autotools*, script*, cmake*) >
+<!ELEMENT dependencies (system*, meson*, cmake*, autotools*, script*) >
 
 <!-- Configure flag -->
 <!ELEMENT flag ( #PCDATA ) >
