@@ -3,7 +3,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later  -->
 
 <!-- The root element needs a some basic info and _a_ dependency -->
-<!ELEMENT gin (name, manufacturer, version, (meson|autotools|script)) >
+<!ELEMENT gin (name, manufacturer, version, license, (meson|autotools|script)) >
 <!ATTLIST gin
    id     CDATA          #REQUIRED
 >
@@ -12,6 +12,10 @@
 <!ELEMENT name ( #PCDATA ) >
 <!ELEMENT manufacturer ( #PCDATA ) >
 <!ELEMENT version ( #PCDATA ) >
+<!ELEMENT license ( #PCDATA ) >
+<!ATTLIST license
+   type (unknown|custom|GPL-2.0|GPL-3.0|LGPL-2.1|LGPL-3.0|BSD|MIT-X11|ARTISTIC|GPL-2.0-ONLY|GPL-3.0-ONLY|LGPL-2.1-ONLY|LGPL-3.0-ONLY|AGPL-3.0|AGPL-3.0-ONLY) "unknown"
+>
 
 <!-- Cleanups -->
 <!ELEMENT cleanups (dir*, file*) >
