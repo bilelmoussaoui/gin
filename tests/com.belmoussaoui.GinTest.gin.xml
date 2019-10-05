@@ -36,13 +36,13 @@
         <flag name="docs">false</flag>
       </meson>
 
-      <meson name="patched-something">
+      <cmake name="patched-something">
         <!-- all non-system deps must have _a_ source -->
         <git url="">
           <!-- a patch to apply to the source -->
           <patch path="fix-thing.patch" />
         </git>
-      </meson>
+      </cmake>
 
       <autotools name="otherthing">
         <archive url="" sha-256="" />

@@ -7,7 +7,7 @@ from xml.etree.ElementTree import ParseError as ElementTreeParseError
 
 from gin.errors import ParseError
 from gin.project import Project
-from gin.dependencies import Dependency, DependencyType
+from gin.dependencies import find_dependencies
 
 
 class Parser:
@@ -29,7 +29,10 @@ class Parser:
         name = self._tree.find('name').text
         version = self._tree.find('version').text
         manufacturer = self._tree.find('manufacturer').text
-        module = self._find_dependency(self._tree)
+        module = find_dependencies(self._tree)
+        if len(module) != 1:
+            raise ParseError("The manifest can contain only one main module")
+        module = module[0]
         # Means that this module can have sub-dependencies
         module.is_main = True
 
@@ -41,18 +44,3 @@ class Parser:
         )
 
         return project
-
-    def _find_dependency(self, tree):
-        dependency = None
-
-        supported_dependencies = DependencyType.all()
-
-        for dependency_type in supported_dependencies:
-            dependency = tree.find(dependency_type)
-            if dependency:
-                break
-
-        if not dependency:
-            return None
-
-        return Dependency.new_with_type(dependency, dependency_type)

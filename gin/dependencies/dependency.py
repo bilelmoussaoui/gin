@@ -1,6 +1,9 @@
-from __future__ import annotations
+
 from abc import ABCMeta
+from xml.etree.ElementTree import ElementTree
+
 from gin.errors import UnsupportedDependency, DependenciesNotSupported
+from .helper import find_dependencies
 
 
 class DependencyType:
@@ -22,13 +25,14 @@ class DependencyType:
 class Dependency(metaclass=ABCMeta):
     """ Dependency
     """
+    _tree: ElementTree
     _type: DependencyType
-    _dependencies: [Dependency]
+    _dependencies: []
     name: str
-    is_main: bool
+    _is_main: bool
 
     @staticmethod
-    def new_with_type(dependency_tag, _type: DependencyType) -> Dependency:
+    def new_with_type(dependency_tag, _type: DependencyType):
 
         if _type == DependencyType.MESON:
             from .meson import MesonDependency
@@ -39,7 +43,7 @@ class Dependency(metaclass=ABCMeta):
         elif _type == DependencyType.AUTOTOOLS:
             from .autotools import AutoToolsDependency
             dependency = AutoToolsDependency(dependency_tag)
-        elif _type == Dependency.SYSTEM:
+        elif _type == DependencyType.SYSTEM:
             from .system import SystemDependency
             dependency = SystemDependency(dependency_tag)
         else:
@@ -47,8 +51,19 @@ class Dependency(metaclass=ABCMeta):
         dependency.is_main = False  # Not a main dependency by default
         return dependency
 
-    def __init__(self, dependency_tag):
+    def __init__(self, dependency_tag: ElementTree):
+        self._tree = dependency_tag
         self.name = dependency_tag.get("name")
+
+    @property
+    def is_main(self) -> bool:
+        return self._is_main
+
+    @is_main.setter
+    def is_main(self, new_val):
+        self._is_main = new_val
+        if self._is_main:
+            self._fetch_subdependencies()
 
     def get_dependencies(self):
         if not self.is_main:
@@ -59,3 +74,9 @@ class Dependency(metaclass=ABCMeta):
 
     def get_type(self) -> DependencyType:
         return self._type
+
+    def _fetch_subdependencies(self):
+        tree = self._tree.find('dependencies')
+        dependencies = find_dependencies(tree)
+        print(dependencies)
+        self._dependencies = dependencies
