@@ -61,7 +61,7 @@
 >
 
 <!-- Dependencies -->
-<!ELEMENT dependencies (system*, meson*, autotools*, script*) >
+<!ELEMENT dependencies (system*, meson*, autotools*, script*, cmake*) >
 
 <!-- Configure flag -->
 <!ELEMENT flag ( #PCDATA ) >
@@ -79,6 +79,13 @@
 <!-- Meson project -->
 <!ELEMENT meson ((git|archive), cleanups*, exports*, dependencies*, flag*) >
 <!ATTLIST meson
+   name       ID           #REQUIRED
+   build-only (true|false) "false"
+>
+
+<!-- CMake project -->
+<!ELEMENT cmake ((git|archive), cleanups*, exports*, dependencies*, flag*) >
+<!ATTLIST cmake
    name       ID           #REQUIRED
    build-only (true|false) "false"
 >
