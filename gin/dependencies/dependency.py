@@ -1,7 +1,9 @@
 
 from abc import ABCMeta
 from xml.etree.ElementTree import ElementTree
+import os
 
+from gin.template import template_env
 from gin.sources import Source
 from gin.errors import (UnsupportedDependency, DependenciesNotSupported,
                         ParseError)
@@ -71,6 +73,19 @@ class Dependency(metaclass=ABCMeta):
         self._is_main = new_val
         if self._is_main:
             self._fetch_subdependencies()
+
+    def generate_pkgbuild(self, output_dir):
+        pkg_template = template_env.get_template("PKGBUILD.in")
+        pkgbuild_content = pkg_template.render(dependency=self)
+
+        pkgbuild_output = os.path.join(output_dir, self.name)
+        os.makedirs(pkgbuild_output, exist_ok=True)
+        with open(os.path.join(pkgbuild_output, "PKGBUILD"), 'w') as pkg_obj:
+            pkg_obj.write(pkgbuild_content)
+
+        if self._is_main:
+            map(lambda dep: dep.generate_pkgbuild(output_dir),
+                self.get_dependencies())
 
     def get_dependencies(self):
         if not self.is_main:
