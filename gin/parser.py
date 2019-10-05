@@ -30,6 +30,8 @@ class Parser:
         version = self._tree.find('version').text
         manufacturer = self._tree.find('manufacturer').text
         module = self._find_dependency(self._tree)
+        # Means that this module can have sub-dependencies
+        module.is_main = True
 
         project = Project(
             id=_id,

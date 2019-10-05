@@ -8,3 +8,7 @@ class ParseError(Exception):
 
 class UnsupportedDependency(Exception):
     pass
+
+
+class DependenciesNotSupported(Exception):
+    pass

@@ -8,7 +8,6 @@ class Project:
     name: str
     manufacturer: str
     version: str
-    dependencies: [Dependency]
     module: Dependency
 
     def __init__(self, **kwargs):
