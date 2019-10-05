@@ -1,0 +1,24 @@
+name: "MIME Validator"
+
+on:
+  push:
+    paths:
+    - "data/com.belmoussaoui.Gin.mime.xml"
+  pull_request:
+    paths:
+    - "data/com.belmoussaoui.Gin.mime.xml"
+
+jobs:
+  mime_validator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Validate MIME
+      run: |
+        sudo apt-get update
+        sudo apt-get install meson gtk-update-icon-cache shared-mime-info python3-pip python3-setuptools -y
+        sudo pip3 install meson --upgrade
+        meson _builddir --prefix=/usr
+        sudo ninja -C _builddir install
+        sudo update-mime-database /usr/share/mime
+

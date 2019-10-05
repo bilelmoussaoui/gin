@@ -1,6 +1,14 @@
 name: Python package
 
-on: [push, pull_request]
+on:
+  push:
+    paths:
+    - "**/*.py"
+    - "tests/*.gin.xml"
+  pull_request:
+    paths:
+    - "**/*.py"
+    - "tests/*.gin.xml"
 
 jobs:
   build:
