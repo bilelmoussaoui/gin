@@ -1,6 +1,7 @@
 project('gin',
   version: '0.1',
-  license: 'LGPL3'
+  license: 'LGPL3',
+  meson_version: '>= 0.50'
 )
 
 application_id = 'com.belmoussaoui.Gin'
