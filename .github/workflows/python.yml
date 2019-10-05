@@ -40,7 +40,6 @@ jobs:
       run: |
         pipenv run install
         pipenv run tests
-        pipenv run start manifest tests/org.gnome.design.Palette.gin.xml
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v1.0.2
