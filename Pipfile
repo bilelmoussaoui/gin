@@ -16,7 +16,7 @@ fire = "*"
 
 [scripts]
 tests = "pytest --cov=./ --cov-report xml --cov-report term-missing"
-build = "python3 setup.py build"
-install = "python3 setup.py install"
+install = "pipenv install --ignore-pipfile"
+install-dev = "pipenv install --ignore-pipfile --dev"
 lint = "autopep8 --in-place --recursive ."
 flake8 = "flake8 --show-source gin/ tests/ --exclude=__init__.py"

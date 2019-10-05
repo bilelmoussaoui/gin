@@ -4,3 +4,7 @@ class ManifestNotFound(Exception):
 
 class ParseError(Exception):
     pass
+
+
+class UnsupportedDependency(Exception):
+    pass

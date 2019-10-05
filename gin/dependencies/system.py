@@ -2,4 +2,6 @@ from .dependency import Dependency
 
 
 class SystemDependency(Dependency):
-    pass
+
+    def __init__(self, tag):
+        Dependency.__init__(self, tag)

@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from gin.parser import Parser
+from gin.dependencies import DependencyType
 
 
 def test_parser():
@@ -12,3 +13,7 @@ def test_parser():
     assert project.name == "GinTest"
     assert project.manufacturer == "GNOME"
     assert project.version == "3.6"
+
+    # Validate the main module
+    assert project.module.name == "gin-test"
+    assert project.module.get_type() == DependencyType.MESON

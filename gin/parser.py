@@ -7,6 +7,7 @@ from xml.etree.ElementTree import ParseError as ElementTreeParseError
 
 from gin.errors import ParseError
 from gin.project import Project
+from gin.dependencies import Dependency, DependencyType
 
 
 class Parser:
@@ -28,11 +29,28 @@ class Parser:
         name = self._tree.find('name').text
         version = self._tree.find('version').text
         manufacturer = self._tree.find('manufacturer').text
+        module = self._find_dependency(self._tree)
 
         project = Project(
             id=_id,
             name=name, version=version,
-            manufacturer=manufacturer
+            manufacturer=manufacturer,
+            module=module
         )
 
         return project
+
+    def _find_dependency(self, tree):
+        dependency = None
+
+        supported_dependencies = DependencyType.all()
+
+        for dependency_type in supported_dependencies:
+            dependency = tree.find(dependency_type)
+            if dependency:
+                break
+
+        if not dependency:
+            return None
+
+        return Dependency.new_with_type(dependency, dependency_type)

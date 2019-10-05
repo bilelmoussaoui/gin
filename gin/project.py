@@ -16,6 +16,7 @@ class Project:
         self.name = kwargs.get("name")
         self.manufacturer = kwargs.get("manufacturer")
         self.version = kwargs.get("version")
+        self.module = kwargs.get("module")
 
     def get_id(self):
         return self._id
