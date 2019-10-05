@@ -22,7 +22,6 @@ class Project:
 
     def display(self):
         print("Welcome to Gin")
-        print("Creating Windows Installer for:")
-        print(f"Name: {self.name}")
+        print(f"Project Name: {self.name}")
         print(f"Manufacturer: {self.manufacturer}")
         print(f"Version: {self.version}")

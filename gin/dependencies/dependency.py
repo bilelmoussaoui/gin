@@ -87,9 +87,10 @@ class Dependency(metaclass=ABCMeta):
     def display(self):
         if self.is_main:
             print(f"Main Module: {self.name}")
+            print(f"Type: {self._type}")
         else:
-            print(f"Dependency: {self.name}")
-        print(f"Type: {self._type}")
+            print(f"\tDependency: {self.name}")
+            print(f"\tType: {self._type}")
 
         if self._type != DependencyType.SYSTEM:
             for source in self.get_sources():
