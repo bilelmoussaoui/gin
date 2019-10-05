@@ -20,6 +20,25 @@ class SourceType:
             SourceType.GIT
         ]
 
+    @staticmethod
+    def load(tag, _type):
+        from .archive import ArchiveSource
+        from .dir import DirSource
+        from .file import FileSource
+        from .git import GitSource
+        from .patch import PatchSource
+        types = {
+            SourceType.ARCHIVE: ArchiveSource,
+            SourceType.FILE: FileSource,
+            SourceType.DIR: DirSource,
+            SourceType.GIT: GitSource,
+            SourceType.PATCH: PatchSource,
+        }
+        if _type not in types.keys():
+            raise UnsupportedSource(f"Source of type {_type} is not supported")
+        obj = types.get(_type)
+        return obj(tag)
+
 
 class Source(metaclass=ABCMeta):
     """ Source
@@ -29,24 +48,11 @@ class Source(metaclass=ABCMeta):
 
     @staticmethod
     def new_with_type(source_tag, _type: SourceType):
-        if _type == SourceType.ARCHIVE:
-            from .archive import ArchiveSource
-            source = ArchiveSource(source_tag)
-        elif _type == SourceType.DIR:
-            from .dir import DirSource
-            source = DirSource(source_tag)
-        elif _type == SourceType.FILE:
-            from .file import FileSource
-            source = FileSource(source_tag)
-        elif _type == SourceType.GIT:
-            from .git import GitSource
-            source = GitSource(source_tag)
-        elif _type == SourceType.PATCH:
-            from .patch import PatchSource
-            source = PatchSource(source_tag)
-        else:
-            raise UnsupportedSource(f"Source {source_tag} is not supported")
+        source = SourceType.load(source_tag, _type)
         return source
 
     def __init__(self, source_tag: ElementTree):
         self._tree = source_tag
+
+    def display(self):
+        print(f"Source type: {self._type}")

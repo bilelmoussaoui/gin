@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+
+<gin id="org.gnome.design.Palette">
+  <!-- name/manufacturer supports xml:lang for translation -->
+  <name>Palette</name>
+  <manufacturer>GNOME</manufacturer>
+  <version>0.1</version>
+  <license type="GPL-3.0" />
+  <!-- must have name for PKGBUILD name etc -->
+  <meson name="palette">
+    <!-- Not needed, we can build from the current dir as well -->
+    <git url="https://gitlab.gnome.org/world/design/palette.git" />
+
+    <!-- Things to remove before bundling -->
+    <cleanups>
+      <dir path="$prefix/$datadir/applications" />
+      <dir path="$prefix/$datadir/metainfo" />
+      <dir path="$prefix/$datadir/icons" />
+    </cleanups>
+
+    <exports>
+      <shortcut icon="data/icons/org.gnome.design.Palette.svg">palette</shortcut>
+    </exports>
+
+    <dependencies>
+      <system name="gtk3" />
+      <system name="gcc" build-only="true" />
+      <system name="vala" build-only="true" />
+    </dependencies>
+  </meson>
+</gin>

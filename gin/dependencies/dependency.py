@@ -3,7 +3,8 @@ from abc import ABCMeta
 from xml.etree.ElementTree import ElementTree
 
 from gin.sources import Source
-from gin.errors import UnsupportedDependency, DependenciesNotSupported
+from gin.errors import (UnsupportedDependency, DependenciesNotSupported,
+                        ParseError)
 from .helper import find_dependencies, find_sources
 
 
@@ -22,6 +23,23 @@ class DependencyType:
             DependencyType.SYSTEM
         ]
 
+    @staticmethod
+    def load(tag, _type):
+        from .meson import MesonDependency
+        from .cmake import CMakeDependency
+        from .autotools import AutotoolsDependency
+        from .system import SystemDependency
+        types = {
+            DependencyType.MESON: MesonDependency,
+            DependencyType.CMAKE: CMakeDependency,
+            DependencyType.AUTOTOOLS: AutotoolsDependency,
+            DependencyType.SYSTEM: SystemDependency,
+        }
+        if _type not in types.keys():
+            raise UnsupportedDependency(f"{tag} is not supported")
+        obj = types.get(_type)
+        return obj(tag)
+
 
 class Dependency(metaclass=ABCMeta):
     """ Dependency
@@ -35,22 +53,8 @@ class Dependency(metaclass=ABCMeta):
 
     @staticmethod
     def new_with_type(dependency_tag, _type: DependencyType):
-
-        if _type == DependencyType.MESON:
-            from .meson import MesonDependency
-            dependency = MesonDependency(dependency_tag)
-        elif _type == DependencyType.CMAKE:
-            from .cmake import CMakeDependency
-            dependency = CMakeDependency(dependency_tag)
-        elif _type == DependencyType.AUTOTOOLS:
-            from .autotools import AutoToolsDependency
-            dependency = AutoToolsDependency(dependency_tag)
-        elif _type == DependencyType.SYSTEM:
-            from .system import SystemDependency
-            dependency = SystemDependency(dependency_tag)
-        else:
-            raise UnsupportedDependency(f"{dependency_tag} is not supported")
-        dependency.is_main = False  # Not a main dependency by default
+        dependency = DependencyType.load(dependency_tag, _type)
+        dependency.is_main = False
         return dependency
 
     def __init__(self, dependency_tag: ElementTree):
@@ -75,6 +79,26 @@ class Dependency(metaclass=ABCMeta):
 
         return self._dependencies
 
+    def get_sources(self):
+        if self._type == DependencyType.SYSTEM:
+            raise ParseError("System dependencies don't support sources")
+        return self._sources
+
+    def display(self):
+        if self.is_main:
+            print(f"Main Module: {self.name}")
+        else:
+            print(f"Dependency: {self.name}")
+        print(f"Type: {self._type}")
+
+        if self._type != DependencyType.SYSTEM:
+            for source in self.get_sources():
+                source.display()
+
+        if self.is_main:
+            for dependency in self.get_dependencies():
+                dependency.display()
+
     def get_type(self) -> DependencyType:
         return self._type
 
@@ -85,4 +109,6 @@ class Dependency(metaclass=ABCMeta):
 
     def _fetch_sources(self):
         sources = find_sources(self._tree)
+        if not sources and self._type != DependencyType.SYSTEM:
+            raise ParseError("Dependency should have at least one source")
         self._sources = sources

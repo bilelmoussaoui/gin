@@ -17,8 +17,8 @@ class Gin:
         try:
             parser = Parser(self._manifest)
             self._project = parser.get_project()
-        except ParseError:
-            print("Failed to parse the manifest")
+        except ParseError as e:
+            print(f"Failed to parse the manifest {e}")
 
     def manifest(self, manifest):
         path = Path(manifest)
@@ -26,3 +26,5 @@ class Gin:
             raise ManifestNotFound(f"Manifest {manifest} not found")
         self._manifest = Path(manifest)
         self._parse()
+        self._project.display()
+        self._project.module.display()

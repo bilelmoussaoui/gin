@@ -1,8 +1,8 @@
 from .dependency import Dependency, DependencyType
 
 
-class AutoToolsDependency(Dependency):
+class AutotoolsDependency(Dependency):
+    _type = DependencyType.AUTOTOOLS
 
     def __init__(self, tag):
         Dependency.__init__(self, tag)
-        self._type = DependencyType.AUTOTOOLS

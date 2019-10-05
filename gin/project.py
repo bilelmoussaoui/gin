@@ -19,3 +19,10 @@ class Project:
 
     def get_id(self):
         return self._id
+
+    def display(self):
+        print("Welcome to Gin")
+        print("Creating Windows Installer for:")
+        print(f"Name: {self.name}")
+        print(f"Manufacturer: {self.manufacturer}")
+        print(f"Version: {self.version}")

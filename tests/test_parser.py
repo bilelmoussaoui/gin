@@ -4,30 +4,32 @@ from gin.parser import Parser
 from gin.dependencies import DependencyType
 
 
-path = Path('./tests/com.belmoussaoui.GinTest.gin.xml')
+path = Path('./tests/org.gnome.design.Palette.gin.xml')
 parser = Parser(path)
 project = parser.get_project()
 
 
 def test_parse_project():
 
-    assert project.get_id() == "com.belmoussaoui.GinTest"
-    assert project.name == "GinTest"
+    assert project.get_id() == "org.gnome.design.Palette"
+    assert project.name == "Palette"
     assert project.manufacturer == "GNOME"
-    assert project.version == "3.6"
+    assert project.version == "0.1"
 
 
 def test_parse_main_module():
     # Validate the main module
     main_module = project.module
-    assert main_module.name == "gin-test"
+    assert main_module.name == "palette"
     assert main_module.get_type() == DependencyType.MESON
     assert main_module.is_main is True
+
+    assert main_module.get_sources()
 
 
 def test_parse_dependencies():
     dependencies = project.module.get_dependencies()
-    assert len(dependencies) == 5
+    assert len(dependencies) == 3
     expected_dependencies = [
         {
             "name": "gtk3",
@@ -38,15 +40,8 @@ def test_parse_dependencies():
             "type": DependencyType.SYSTEM
         },
         {
-            "name": "something",
-            "type": DependencyType.MESON
-        },
-        {
-            "name": "patched-something",
-            "type": DependencyType.CMAKE
-        }, {
-            "name": "otherthing",
-            "type": DependencyType.AUTOTOOLS
+            "name": "vala",
+            "type": DependencyType.SYSTEM
         }
     ]
 
