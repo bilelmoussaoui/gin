@@ -9,12 +9,13 @@ flake8 = "*"
 pipenv = "*"
 setuptools = "*"
 autopep8 = "*"
+pytest-cov = "*"
 
 [packages]
 fire = "*"
 
 [scripts]
-tests = "pytest tests/"
+tests = "pytest --cov=./ --cov-report xml --cov-report term-missing"
 build = "python3 setup.py build"
 install = "python3 setup.py install"
 lint = "autopep8 --in-place --recursive ."
