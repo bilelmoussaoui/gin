@@ -1,0 +1,19 @@
+name: "MIME Validator"
+
+on:
+  push:
+    paths:
+    - "com.belmoussaoui.Gin.mime.xml"
+  pull_request:
+    paths:
+    - "data/com.belmoussaoui.Gin.mime.xml"
+
+jobs:
+  mime_validator:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Validate MIME
+      run: |
+        sudo cp "data/com.belmoussaoui.Gin.mime.xml" /usr/share/mime
+        sudo update-mime-database /usr/share/mime
