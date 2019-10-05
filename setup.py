@@ -21,7 +21,7 @@ setuptools.setup(
     license='MIT',
     url="https://github.com/bilelmoussaoui/gin",
     entry_points={
-        'console_scripts': ['gin=gin.cli:main'],
+        'console_scripts': ['gin=gin.cli:run'],
     },
     packages=[
         'gin',

@@ -13,6 +13,8 @@ pytest-cov = "*"
 
 [packages]
 fire = "*"
+click = "*"
+jinja2 = "*"
 
 [scripts]
 tests = "pytest -vv --cov=gin . --cov-report xml --cov-report term-missing"
