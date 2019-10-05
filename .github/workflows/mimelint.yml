@@ -1,14 +1,12 @@
 name: "MIME Validator"
 
-
-on: [push, pull_request]
-# on:
-#   push:
-#     paths:
-#     - "data/com.belmoussaoui.Gin.mime.xml"
-#   pull_request:
-#     paths:
-#     - "data/com.belmoussaoui.Gin.mime.xml"
+on:
+  push:
+    paths:
+    - "data/com.belmoussaoui.Gin.mime.xml"
+  pull_request:
+    paths:
+    - "data/com.belmoussaoui.Gin.mime.xml"
 
 jobs:
   mime_validator:
