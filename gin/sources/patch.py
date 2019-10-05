@@ -1,4 +1,5 @@
 from .source import Source, SourceType
+from gin.errors import MissingAttributeError
 
 
 class PatchSource(Source):
@@ -7,4 +8,6 @@ class PatchSource(Source):
 
     def __init__(self, tag):
         Source.__init__(self, tag)
-        self.patch = tag.get("path")
+        self.path = tag.get("path")
+        if self.path is None:
+            raise MissingAttributeError("Patch tag requires path attribute")

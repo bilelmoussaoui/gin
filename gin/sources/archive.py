@@ -1,4 +1,5 @@
 from .source import Source, SourceType
+from gin.errors import MissingAttributeError
 
 
 class ArchiveSource(Source):
@@ -10,4 +11,10 @@ class ArchiveSource(Source):
     def __init__(self, tag):
         Source.__init__(self, tag)
         self.url = tag.get("url")
-        self.sha256 = tag.get("sha256")
+        if not self.url:
+            raise MissingAttributeError(
+                "Archive source requires a url attribute")
+        self.sha256 = tag.get("sha-256")
+        if not self.sha256:
+            raise MissingAttributeError(
+                "Archive source requires a sha256 attribute")

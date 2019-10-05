@@ -12,3 +12,7 @@ class UnsupportedDependency(Exception):
 
 class UnsupportedSource(Exception):
     pass
+
+
+class MissingAttributeError(Exception):
+    pass
