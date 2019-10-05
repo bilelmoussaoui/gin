@@ -10,12 +10,13 @@ pipenv = "*"
 setuptools = "*"
 autopep8 = "*"
 pytest-cov = "*"
+importlib-metadata = "*"
 
 [packages]
 fire = "*"
 
 [scripts]
-tests = "pytest --verbose --cov=./ --cov-report xml --cov-report term-missing"
+tests = "pytest --cov=gin --cov-report xml --cov-report term-missing tests/ --verbose"
 install = "python3 setup.py install"
 install-dev = "pipenv install --ignore-pipfile --dev"
 lint = "autopep8 --in-place --recursive ."
