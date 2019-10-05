@@ -2,8 +2,9 @@
 from abc import ABCMeta
 from xml.etree.ElementTree import ElementTree
 
+from gin.sources import Source
 from gin.errors import UnsupportedDependency, DependenciesNotSupported
-from .helper import find_dependencies
+from .helper import find_dependencies, find_sources
 
 
 class DependencyType:
@@ -28,6 +29,7 @@ class Dependency(metaclass=ABCMeta):
     _tree: ElementTree
     _type: DependencyType
     _dependencies: []
+    _sources: [Source]
     name: str
     _is_main: bool
 
@@ -54,6 +56,7 @@ class Dependency(metaclass=ABCMeta):
     def __init__(self, dependency_tag: ElementTree):
         self._tree = dependency_tag
         self.name = dependency_tag.get("name")
+        self._fetch_sources()
 
     @property
     def is_main(self) -> bool:
@@ -78,5 +81,8 @@ class Dependency(metaclass=ABCMeta):
     def _fetch_subdependencies(self):
         tree = self._tree.find('dependencies')
         dependencies = find_dependencies(tree)
-        print(dependencies)
         self._dependencies = dependencies
+
+    def _fetch_sources(self):
+        sources = find_sources(self._tree)
+        self._sources = sources

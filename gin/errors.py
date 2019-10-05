@@ -12,3 +12,7 @@ class UnsupportedDependency(Exception):
 
 class DependenciesNotSupported(Exception):
     pass
+
+
+class UnsupportedSource(Exception):
+    pass

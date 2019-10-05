@@ -1,5 +1,7 @@
-from .source import Source
+from .source import Source, SourceType
 
 
 class PatchSource(Source):
-    pass
+    def __init__(self, tag):
+        Source.__init__(self, tag)
+        self._type = SourceType.PATCH
