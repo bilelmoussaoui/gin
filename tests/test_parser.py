@@ -29,19 +29,29 @@ def test_parse_main_module():
 
 def test_parse_dependencies():
     dependencies = project.module.get_dependencies()
-    assert len(dependencies) == 3
+    assert len(dependencies) == 5
     expected_dependencies = [
         {
             "name": "gtk3",
             "type": DependencyType.SYSTEM
         },
         {
-            "name": "gcc",
+            "name": "gettext",
             "type": DependencyType.SYSTEM
         },
         {
-            "name": "vala",
+            "name": "gobject-introspection",
             "type": DependencyType.SYSTEM
+        },
+        {
+            "name": "gcc",
+            "type": DependencyType.SYSTEM,
+            "build_only": True
+        },
+        {
+            "name": "vala",
+            "type": DependencyType.SYSTEM,
+            "build_only": True
         }
     ]
 
@@ -55,3 +65,4 @@ def test_parse_dependencies():
 def dependency_test(dependency, expected):
     assert dependency.name == expected["name"]
     assert dependency.get_type() == expected['type']
+    assert dependency.build_only == expected.get("build_only", False)
