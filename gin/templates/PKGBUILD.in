@@ -5,9 +5,25 @@ pkgver={{ version }}
 pkgrel=1
 arch=( "any" )
 depends=(
-  {% for dependency in dependencies %}
-    "${MINGW_PACKAGE_PREFIX}-{{ dependency.name }}"
+  {% for dep in dependency.get_dependencies() %}
+    {% if not dep.build_only %}
+      "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
+    {% endif %}
   {% endfor %}
+)
+
+makedepends=(
+  {% for dep in dependency.get_dependencies() %}
+    {% if dep.build_only %}
+      "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
+    {% endif %}
+  {% endfor %}
+  {% if dependency.get_type() == 'meson' %}
+  "${MINGW_PACKAGE_PREFIX}-meson"
+  "${MINGW_PACKAGE_PREFIX}-ninja"
+  {% elif dependency.get_type() == 'cmake' %}
+  {% elif dependency.get_type() == 'autotools' %}
+  {% endif %}
 )
 
 options=("strip" "staticlibs")
@@ -23,7 +39,7 @@ pkgver() {
 prepare() {
   cd "$srcdir/$_pkgname"
   git submodule update --init
-  meson build --prefix="${MINGW_PREFIX}" --buildtype plain @MESON_ARGS@
+  meson build --prefix="${MINGW_PREFIX}"
 }
 
 build() {

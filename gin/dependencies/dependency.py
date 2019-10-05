@@ -52,6 +52,7 @@ class Dependency(metaclass=ABCMeta):
     _sources: [Source]
     name: str
     _is_main: bool
+    build_only: bool
 
     @staticmethod
     def new_with_type(dependency_tag, _type: DependencyType):
@@ -62,6 +63,7 @@ class Dependency(metaclass=ABCMeta):
     def __init__(self, dependency_tag: ElementTree):
         self._tree = dependency_tag
         self.name = dependency_tag.get("name")
+        self.build_only = dependency_tag.get("build-only") == "true"
         self._fetch_sources()
 
     @property
