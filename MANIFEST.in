@@ -1,0 +1,3 @@
+include README.md
+include LICENCE.md
+include gin/templates/PKGBUILD.in

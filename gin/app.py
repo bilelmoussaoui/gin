@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 from pathlib import Path
+import tempfile
+import os
 
 from gin.errors import ManifestNotFound, ParseError
 from gin.parser import Parser
@@ -11,11 +13,12 @@ class Gin:
     _project: Project
 
     def __init__(self):
-        pass
+        self._workdir = tempfile.TemporaryDirectory(prefix="gin").name
 
     def prepare(self):
         # This will run generate_pkgbuild on dependencies too
-        self._project.module.generate_pkgbuild()
+        pkgbuilds_dir = os.path.join(self._workdir, 'PKGBUILDS')
+        self._project.module.generate_pkgbuild(pkgbuilds_dir)
 
     def build(self):
         pass
@@ -24,6 +27,7 @@ class Gin:
         self._manifest = Path(manifest)
         if not self._manifest.exists():
             raise ManifestNotFound(f"Manifest {manifest} not found")
+        self._workdir = os.path.join(self._manifest.parent, ".gin")
         self._parse()
 
     def run(self):
