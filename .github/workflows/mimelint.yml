@@ -17,5 +17,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Validate MIME
       run: |
-        sudo cp "data/com.belmoussaoui.Gin.mime.xml" /usr/share/mime
+        sudo apt-get install meson gtk-update-icon-cache shared-mime-info -y
+        meson -C _builddir --prefix=/usr
+        sudo ninja -C _builddir install
         sudo update-mime-database /usr/share/mime
+
