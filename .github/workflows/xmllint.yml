@@ -3,9 +3,11 @@ name: "XML Lint"
 on:
   push:
     paths:
+    - "data/gin.dtd"
     - "tests/*.gin.xml"
   pull_request:
     paths:
+    - "data/gin.dtd"
     - "tests/*.gin.xml"
 
 jobs:

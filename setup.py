@@ -32,10 +32,8 @@ setuptools.setup(
     install_requires=requirements,
     classifiers=[
         'Intended Audience :: Developers',
-        'Programming Language :: Python :: 3.7',
         "License :: OSI Approved :: MIT License",
         'Topic :: Utilities',
-        'Topic :: Internet :: WWW/HTTP',
     ],
     tests_require=test_requirements,
     test_suite='tests'

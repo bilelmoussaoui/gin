@@ -8,5 +8,5 @@ charset = utf-8
 [*.{py,py.in}]
 indent_size = 4
 
-[*.xml]
+[*.{xml,yml}]
 indent_size = 2

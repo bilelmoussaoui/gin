@@ -1,4 +1,5 @@
 # Gin
+![Python Build](https://github.com/bilelmoussaoui/gin/workflows/Python%20package/badge.svg)
 
 Gin is a Windows Installer creator.
 
