@@ -1,6 +1,6 @@
-from abc import ABCMeta
+from __future__ import annotations
+from abc import ABCMeta, abstractclassmethod
 from gin.errors import UnsupportedDependency
-
 
 class DependencyType:
     SYSTEM = "system"
@@ -25,22 +25,23 @@ class Dependency(metaclass=ABCMeta):
     name: str
 
     @staticmethod
-    def new_with_type(dependency, _type: DependencyType):
+    def new_with_type(dependency_tag, _type: DependencyType) -> Dependency:
 
         if _type == DependencyType.MESON:
             from .meson import MesonDependency
-            return MesonDependency(dependency)
+            dependency = MesonDependency(dependency_tag)
         elif _type == DependencyType.CMAKE:
             from .cmake import CMakeDependency
-            return CMakeDependency(dependency)
+            dependency = CMakeDependency(dependency_tag)
         elif _type == DependencyType.AUTOTOOLS:
             from .autotools import AutoToolsDependency
-            return AutoToolsDependency(dependency)
+            dependency = AutoToolsDependency(dependency_tag)
         elif _type == Dependency.SYSTEM:
             from .system import SystemDependency
-            return SystemDependency(dependency)
+            dependency = SystemDependency(dependency_tag)
         else:
-            raise UnsupportedDependency(f"{dependency} is not supported")
+            raise UnsupportedDependency(f"{dependency_tag} is not supported")
+        return dependency
 
     def __init__(self, dependency_tag):
         self.name = dependency_tag.get("name")
