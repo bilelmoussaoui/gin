@@ -18,7 +18,7 @@ jobs:
     - name: Validate MIME
       run: |
         sudo apt-get update
-        sudo apt-get install meson gtk-update-icon-cache shared-mime-info python3-pip -y
+        sudo apt-get install meson gtk-update-icon-cache shared-mime-info python3-pip python3-setuptools -y
         sudo pip3 install meson --upgrade
         meson _builddir --prefix=/usr
         sudo ninja -C _builddir install
