@@ -18,7 +18,7 @@ jobs:
     - name: Validate MIME
       run: |
         sudo apt-get install meson gtk-update-icon-cache shared-mime-info -y
-        meson -C _builddir --prefix=/usr
+        meson _builddir --prefix=/usr
         sudo ninja -C _builddir install
         sudo update-mime-database /usr/share/mime
 
