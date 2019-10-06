@@ -17,8 +17,7 @@ class Gin:
 
     def prepare(self):
         # This will run generate_pkgbuild on dependencies too
-        pkgbuilds_dir = os.path.join(self._workdir, 'PKGBUILDS')
-        self._project.module.generate_pkgbuild(pkgbuilds_dir)
+        self._project.module.prepare()
 
     def build(self):
         pass
@@ -38,5 +37,6 @@ class Gin:
         try:
             parser = Parser(self._manifest)
             self._project = parser.get_project()
+            self._project.set_workdir(self._workdir)
         except ParseError as e:
             print(f"Failed to parse the manifest {e}")

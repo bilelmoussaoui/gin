@@ -1,0 +1,52 @@
+%{?mingw_package_header}
+
+Name:           {{ dependency.name }}
+Version:        1
+License:        FIXME
+Release:        1%{?dist}
+Summary:        MinGW compiled
+
+{% for source in dependency.get_sources() %}
+{% if source.get_type() == "archive" %}
+Source0:        {{ source }}
+{% endif %}
+{% endfor %}
+
+BuildArch:      noarch
+
+{% for dep in dependency.get_dependencies() %}
+    {% if dep.build_only %}
+BuildRequires:  mingw64-{{ dep.name }}
+    {% endif %}
+{% endfor %}
+{% if dependency.get_type() == 'meson' %}
+BuildRequires:  mingw64-meson
+BuildRequires:  mingw64-ninja
+    {% elif dependency.get_type() == 'cmake' %}
+    {% elif dependency.get_type() == 'autotools' %}
+{% endif %}
+
+%description
+MinGW compiled example library.
+
+%{?mingw_debug_package}
+
+%prep
+rm -rf {{ dependency.name }}
+git clone {{ dependency.get_main_source() }}
+cd {{ dependency.name }}
+git submodule update --init
+
+%build
+cd {{ dependency.name }}
+{% if dependency.get_type() == 'meson' %}
+%meson
+%meson_build
+{% endif %}
+
+%install
+cd {{ dependency.name }}
+{% if dependency.get_type() == 'meson' %}
+%meson_install DESTDIR=$RPM_BUILD_ROOT
+{% endif %}
+

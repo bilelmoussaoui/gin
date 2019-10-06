@@ -52,6 +52,8 @@ class Dependency(metaclass=ABCMeta):
     _is_main: bool
     _flags: {str: str}
 
+    _workdir: str
+
     name: str
     build_only: bool
 
@@ -84,19 +86,22 @@ class Dependency(metaclass=ABCMeta):
         if self._is_main:
             self._fetch_subdependencies()
 
-    def generate_pkgbuild(self, output_dir):
-        pkg_template = template_env.get_template("PKGBUILD.in")
-        pkgbuild_content = pkg_template.render(dependency=self)
+    def prepare(self):
+        self._generate_spec()
 
-        pkgbuild_output = os.path.join(output_dir, self.name)
-        os.makedirs(pkgbuild_output, exist_ok=True)
-        with open(os.path.join(pkgbuild_output, "PKGBUILD"), 'w') as pkg_obj:
-            pkg_obj.write(pkgbuild_content)
+    def build(self):
+        # Run dnf builddep file.spec to install dependencies
+        # Build: rpmbuild -bi file.spec
+        pass
 
-        if self.is_main:
-            for dependency in self.get_dependencies():
-                if dependency.get_type() != DependencyType.SYSTEM:
-                    dependency.generate_pkgbuild(output_dir)
+    def set_workdir(self, workdir):
+        self._workdir = os.path.join(workdir, self.name)
+        if self.get_type() != DependencyType.SYSTEM:
+            # Don't create a workdir for system dependencies
+            os.makedirs(self._workdir, exist_ok=True)
+
+        for dependency in self.get_dependencies():
+            dependency.set_workdir(workdir)
 
     def get_dependencies(self):
         return self._dependencies
@@ -144,3 +149,27 @@ class Dependency(metaclass=ABCMeta):
         flags = self._tree.findall('flag')
         for flag in flags:
             self._flags[flag.get('name')] = flag.text
+
+    def _generate_pkgbuild(self, output_dir):
+        pkg_template = template_env.get_template("PKGBUILD.in")
+        pkgbuild_content = pkg_template.render(dependency=self)
+
+        with open(os.path.join(self._workdir, "PKGBUILD"), 'w') as pkg_obj:
+            pkg_obj.write(pkgbuild_content)
+
+        if self.is_main:
+            for dependency in self.get_dependencies():
+                if dependency.get_type() != DependencyType.SYSTEM:
+                    dependency.generate_pkgbuild()
+
+    def _generate_spec(self):
+        pkg_template = template_env.get_template("mingw.spec.in")
+        spec_content = pkg_template.render(dependency=self)
+
+        with open(os.path.join(self._workdir, f"{self.name}.spec"), 'w') as pkg_obj:
+            pkg_obj.write(spec_content)
+
+        if self.is_main:
+            for dependency in self.get_dependencies():
+                if dependency.get_type() != DependencyType.SYSTEM:
+                    dependency.generate_spec()

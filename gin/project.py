@@ -10,6 +10,8 @@ class Project:
     version: str
     module: Dependency
 
+    _workdir: str
+
     def __init__(self, **kwargs):
         self._id = kwargs.get("id")
         self.name = kwargs.get("name")
@@ -25,3 +27,7 @@ class Project:
         print(f"Project Name: {self.name}")
         print(f"Manufacturer: {self.manufacturer}")
         print(f"Version: {self.version}")
+
+    def set_workdir(self, workdir):
+        self._workdir = workdir
+        self.module.set_workdir(self._workdir)
