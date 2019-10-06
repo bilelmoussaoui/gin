@@ -3,21 +3,28 @@ from pathlib import Path
 import tempfile
 import os
 
+from logzero import logger
+
 from gin.errors import ManifestNotFound, ParseError
 from gin.parser import Parser
 from gin.project import Project
-
+from gin.container import Container
 
 class Gin:
     _manifest: Path
     _project: Project
+    _container: Container # Running container ID
 
     def __init__(self):
         self._workdir = tempfile.TemporaryDirectory(prefix="gin").name
 
     def prepare(self):
         # This will run generate_pkgbuild on dependencies too
-        self._project.module.prepare()
+        self._container = Container(self._workdir)
+        self._container.run()
+
+        self._project.module.prepare(self._container)
+        self._container.stop()
 
     def build(self):
         pass

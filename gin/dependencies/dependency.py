@@ -1,13 +1,16 @@
 
+import os
 from abc import ABCMeta, abstractmethod
 from xml.etree.ElementTree import ElementTree
-import os
 
-from gin.template import template_env
+from logzero import logger
+
+from gin.errors import ParseError, UnsupportedDependency
+from gin.container import Container
 from gin.sources import Source
-from gin.errors import UnsupportedDependency, ParseError
+from gin.template import template_env
+
 from .helper import find_dependencies, find_sources
-from gin.helper import run_in_container
 
 
 class DependencyType:
@@ -87,14 +90,14 @@ class Dependency(metaclass=ABCMeta):
         if self._is_main:
             self._fetch_subdependencies()
 
-    def prepare(self):
+    def prepare(self, container: Container):
+        logger.info(f"Preparing {self.name}")
         self._generate_spec()
-        spec_file = os.path.join(self._workdir, f"{self.name}.spec")
+        spec_file = f"/data/{self.name}/{self.name}.spec"
         # Install required dependencies
-
-        run_in_container(f"dnf builddep {spec_file}")
+        container.exec(f"dnf builddep -y {spec_file}")
         # Build rpm file
-        run_in_container(f"rpmbuild -bb {spec_file} --build-in-place --quiet")
+        container.exec(f"rpmbuild -bb {spec_file} --build-in-place --quiet")
 
     def build(self):
         pass
@@ -170,9 +173,11 @@ class Dependency(metaclass=ABCMeta):
     def _generate_spec(self):
         pkg_template = template_env.get_template("mingw.spec.in")
         spec_content = pkg_template.render(dependency=self)
+        spec_output = os.path.join(self._workdir, f"{self.name}.spec")
 
-        with open(os.path.join(self._workdir, f"{self.name}.spec"), 'w') as pkg_obj:
+        with open(spec_output, 'w') as pkg_obj:
             pkg_obj.write(spec_content)
+            logger.info(f"Spec file for {self.name} generated at {spec_output}")
 
         if self.is_main:
             for dependency in self.get_dependencies():
