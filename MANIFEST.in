@@ -1,3 +1,7 @@
 include README.md
 include LICENCE.md
 include gin/templates/PKGBUILD.in
+include gin/templates/app.wxs.in
+include gin/templates/defines.wxi.in
+include gin/templates/banners/WixUIBanner.bmp
+include gin/templates/banners/WixUIDialog.bmp
