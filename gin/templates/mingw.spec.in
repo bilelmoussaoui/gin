@@ -15,16 +15,19 @@ Source0:        {{ source }}
 BuildArch:      noarch
 
 {% for dep in dependency.get_dependencies() %}
-    {% if dep.build_only %}
 BuildRequires:  mingw64-{{ dep.name }}
-    {% endif %}
 {% endfor %}
 {% if dependency.get_type() == 'meson' %}
-BuildRequires:  mingw64-meson
-BuildRequires:  mingw64-ninja
+BuildRequires:  meson
     {% elif dependency.get_type() == 'cmake' %}
     {% elif dependency.get_type() == 'autotools' %}
 {% endif %}
+
+{% for dep in dependency.get_dependencies() %}
+    {% if not dep.build_only %}
+Requires:  mingw64-{{ dep.name }}
+    {% endif %}
+{% endfor %}
 
 %description
 MinGW compiled example library.
@@ -40,13 +43,12 @@ git submodule update --init
 %build
 cd {{ dependency.name }}
 {% if dependency.get_type() == 'meson' %}
-%meson
-%meson_build
+%mingw_meson
 {% endif %}
 
 %install
 cd {{ dependency.name }}
 {% if dependency.get_type() == 'meson' %}
-%meson_install DESTDIR=$RPM_BUILD_ROOT
+%mingw_ninja -C build_win64 install
 {% endif %}
 

@@ -25,7 +25,6 @@
     <dependencies>
       <system name="gtk3" />
       <system name="gettext" />
-      <system name="gobject-introspection" />
       <system name="gcc" build-only="true" />
       <system name="vala" build-only="true" />
     </dependencies>
