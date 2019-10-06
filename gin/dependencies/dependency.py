@@ -7,6 +7,7 @@ from gin.template import template_env
 from gin.sources import Source
 from gin.errors import UnsupportedDependency, ParseError
 from .helper import find_dependencies, find_sources
+from gin.helper import run_in_container
 
 
 class DependencyType:
@@ -88,10 +89,14 @@ class Dependency(metaclass=ABCMeta):
 
     def prepare(self):
         self._generate_spec()
+        spec_file = os.path.join(self._workdir, f"{self.name}.spec")
+        # Install required dependencies
+
+        run_in_container(f"dnf builddep {spec_file}")
+        # Build rpm file
+        run_in_container(f"rpmbuild -bb {spec_file} --build-in-place --quiet")
 
     def build(self):
-        # Run dnf builddep file.spec to install dependencies
-        # Build: rpmbuild -bi file.spec
         pass
 
     def set_workdir(self, workdir):
