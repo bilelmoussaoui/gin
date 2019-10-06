@@ -10,3 +10,4 @@ htmlcov/
 coverage.xml
 .coverage
 tests/.gin/
+.vscode/

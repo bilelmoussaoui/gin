@@ -16,6 +16,7 @@ gin = {editable = true,path = "."}
 click = "*"
 jinja2 = "*"
 gin = {editable = true,path = "."}
+logzero = "*"
 
 [scripts]
 tests = "pytest -vv --cov=gin . --cov-report xml --cov-report term-missing"
