@@ -7,3 +7,5 @@ template_dir = os.path.join(dir_path, 'templates')
 loader = jinja2.FileSystemLoader(template_dir)
 
 template_env = jinja2.Environment(loader=loader)
+template_env.trim_blocks = True
+template_env.lstrip_blocks = True

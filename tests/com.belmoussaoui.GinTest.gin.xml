@@ -9,7 +9,7 @@
   <!-- must have name for PKGBUILD name etc -->
   <meson name="gin-test">
     <!-- Not needed, we can build from the current dir as well -->
-    <git commit="" url="" />
+    <git url="https://gitlab.com" />
 
     <!-- Things to remove before bundling -->
     <cleanups>
@@ -32,20 +32,20 @@
 
       <meson name="something">
         <!-- all non-system deps must have _a_ source -->
-        <git url="" commit="" branch="" />
+        <git url="https://github.com" />
         <flag name="docs">false</flag>
       </meson>
 
       <cmake name="patched-something">
         <!-- all non-system deps must have _a_ source -->
-        <git url="">
+        <git url="https://gitlab.com">
           <!-- a patch to apply to the source -->
           <patch path="fix-thing.patch" />
         </git>
       </cmake>
 
       <autotools name="otherthing">
-        <archive url="" sha-256="" />
+        <archive url="https://gitlab.com" sha-256="test2" />
 
         <cleanups>
           <dir path="$prefix/$datadir/docs" />

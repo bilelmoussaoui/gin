@@ -1,5 +1,5 @@
 
-from abc import ABCMeta
+from abc import ABCMeta, abstractmethod
 from xml.etree.ElementTree import ElementTree
 import os
 
@@ -49,8 +49,10 @@ class Dependency(metaclass=ABCMeta):
     _type: DependencyType
     _dependencies: []
     _sources: [Source]
-    name: str
     _is_main: bool
+    _flags: {str: str}
+
+    name: str
     build_only: bool
 
     @staticmethod
@@ -59,12 +61,18 @@ class Dependency(metaclass=ABCMeta):
         dependency.is_main = False
         return dependency
 
+    @abstractmethod
+    def get_flags(self):
+        pass
+
     def __init__(self, dependency_tag: ElementTree):
         self._tree = dependency_tag
         self.name = dependency_tag.get("name")
         self.build_only = dependency_tag.get("build-only") == "true"
         self._dependencies = []
+        self._flags = {}
         self._fetch_sources()
+        self._fetch_flags()
 
     @property
     def is_main(self) -> bool:
@@ -131,3 +139,8 @@ class Dependency(metaclass=ABCMeta):
         if not sources and self._type != DependencyType.SYSTEM:
             raise ParseError("Dependency should have at least one source")
         self._sources = sources
+
+    def _fetch_flags(self):
+        flags = self._tree.findall('flag')
+        for flag in flags:
+            self._flags[flag.get('name')] = flag.text

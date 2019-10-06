@@ -7,7 +7,7 @@ arch=( "any" )
 depends=(
   {% for dep in dependency.get_dependencies() %}
     {% if not dep.build_only %}
-      "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
+    "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
     {% endif %}
   {% endfor %}
 )
@@ -15,12 +15,12 @@ depends=(
 makedepends=(
   {% for dep in dependency.get_dependencies() %}
     {% if dep.build_only %}
-      "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
+    "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
     {% endif %}
   {% endfor %}
   {% if dependency.get_type() == 'meson' %}
-  "${MINGW_PACKAGE_PREFIX}-meson"
-  "${MINGW_PACKAGE_PREFIX}-ninja"
+    "${MINGW_PACKAGE_PREFIX}-meson"
+    "${MINGW_PACKAGE_PREFIX}-ninja"
   {% elif dependency.get_type() == 'cmake' %}
   {% elif dependency.get_type() == 'autotools' %}
   {% endif %}
@@ -36,16 +36,16 @@ source=(
 sha256sums=(
   {% for source in dependency.get_sources() %}
     {% if source.get_type() == "archive" %}
-      "{{source.sha256}}"
+    "{{source.sha256}}"
     {% else %}
-      "SKIP"
+    "SKIP"
     {% endif %}
   {% endfor %}
 )
 
 
 pkgver() {
-  cd "$srcdir/$_pkgname"
+    cd "$srcdir/$_pkgname"
 
   {% if dependency.get_main_source() and dependency.get_main_source().get_type() == "git" %}
     git describe --long --tags | sed "s/\([^-]*-g\)/r\1/;s/-/./g"
@@ -53,20 +53,20 @@ pkgver() {
 }
 
 prepare() {
-  cd "$srcdir/$_pkgname"
+    cd "$srcdir/$_pkgname"
   {% if dependency.get_main_source() and dependency.get_main_source().get_type() == "git" %}
     git submodule update --init
   {% endif %}
 
   {% if dependency.get_type() == 'meson' %}
-    meson build --prefix="${MINGW_PREFIX}"
+    meson build --prefix="${MINGW_PREFIX}" {{ dependency.get_flags() }}
   {% elif dependency.get_type() == 'cmake' %}
   {% elif dependency.get_type() == 'autotools' %}
   {% endif %}
 }
 
 build() {
-  cd "$srcdir/$_pkgname"
+    cd "$srcdir/$_pkgname"
   {% if dependency.get_type() == 'meson' %}
     ninja -C build
   {% elif dependency.get_type() == 'cmake' %}
@@ -75,7 +75,7 @@ build() {
 }
 
 package() {
-  cd "$srcdir/$_pkgname"
+    cd "$srcdir/$_pkgname"
   {% if dependency.get_type() == 'meson' %}
     DESTDIR="${pkgdir}${MINGW_PREFIX}" ninja -C build install
   {% elif dependency.get_type() == 'cmake' %}
