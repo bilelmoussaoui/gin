@@ -25,6 +25,7 @@
     <dependencies>
       <system name="gtk3" />
       <system name="gettext" />
+      <system name="vala" build-only="true" />
       <system name="gcc" build-only="true" />
     </dependencies>
   </meson>

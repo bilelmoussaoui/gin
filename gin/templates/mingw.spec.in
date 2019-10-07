@@ -15,7 +15,11 @@ Source0:        {{ source }}
 BuildArch:      noarch
 
 {% for dep in dependency.get_dependencies() %}
+    {% if dep.name in mingw_packages %}
 BuildRequires:  mingw64-{{ dep.name }}
+    {% else %}
+BuildRequires: {{ dep.name }}
+    {% endif %}
 {% endfor %}
 {% if dependency.get_type() == 'meson' %}
 BuildRequires:  meson
@@ -25,7 +29,11 @@ BuildRequires:  meson
 
 {% for dep in dependency.get_dependencies() %}
     {% if not dep.build_only %}
+        {% if dep.name in mingw_packages %}
 Requires:  mingw64-{{ dep.name }}
+        {% else %}
+Requires:  {{ dep.name }}
+        {% endif %}
     {% endif %}
 {% endfor %}
 
