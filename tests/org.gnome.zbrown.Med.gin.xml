@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+
+<gin id="org.gnome.zbrown.Med">
+  <!-- name/manufacturer supports xml:lang for translation -->
+  <name>Med</name>
+  <manufacturer>GNOME</manufacturer>
+  <version>0.1</version>
+  <license type="GPL-3.0" />
+  <!-- must have name for PKGBUILD name etc -->
+  <meson name="med">
+    <!-- Not needed, we can build from the current dir as well -->
+    <git url="https://gitlab.gnome.org/ZanderBrown/med.git" />
+
+    <!-- Things to remove before bundling -->
+    <cleanups>
+      <dir path="$prefix/$datadir/applications" />
+      <dir path="$prefix/$datadir/metainfo" />
+      <dir path="$prefix/$datadir/icons" />
+    </cleanups>
+
+    <exports>
+      <shortcut icon="data/icons/org.gnome.zbrown.Med.svg">med</shortcut>
+    </exports>
+
+    <dependencies>
+      <system name="gtk3" />
+      <system name="gettext" />
+      <system name="gcc" build-only="true" />
+      <meson name="gtksourceview">
+        <archive url="https://download.gnome.org/sources/gtksourceview/4.4/gtksourceview-4.4.0.tar.xz" sha-256="9ddb914aef70a29a66acd93b4f762d5681202e44094d2d6370e51c9e389e689a" />
+        <flag name="gir">false</flag>
+        <flag name="vapi">false</flag>
+        <dependencies>
+          <system name="glib2" build-only="true" />
+          <system name="gtk3" build-only="true" />
+          <system name="libxml2" build-only="true" />
+          <system name="fribidi" build-only="true" />
+          <meson name="gobject-introspection" build-only="true">
+              <archive url="https://download.gnome.org/sources/gobject-introspection/1.62/gobject-introspection-1.62.0.tar.xz" sha-256="b1ee7ed257fdbc008702bdff0ff3e78a660e7e602efa8f211dc89b9d1e7d90a2" />
+              <flag name="doctool">disabled</flag>
+              <dependencies>
+                <system name="glib2" build-only="true" />
+                <system name="flex" build-only="true" />
+                <system name="bison" build-only="true" />
+              </dependencies>
+          </meson>
+        </dependencies>
+      </meson>
+    </dependencies>
+  </meson>
+</gin>

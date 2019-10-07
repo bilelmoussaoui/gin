@@ -6,6 +6,11 @@ License:        FIXME
 Release:        1%{?dist}
 Summary:        MinGW compiled
 
+# This is used so rpmbuild will download source for us
+# As rpmbuild doesn't have any integrity checks 
+# We must do that ourselves.
+%undefine _disable_source_fetch
+
 {% for source in dependency.get_sources() %}
 {% if source.get_type() == "archive" %}
 Source0:        {{ source }}
@@ -21,11 +26,6 @@ BuildRequires:  mingw64-{{ dep.name }}
 BuildRequires: {{ dep.name }}
     {% endif %}
 {% endfor %}
-{% if dependency.get_type() == 'meson' %}
-BuildRequires:  meson
-    {% elif dependency.get_type() == 'cmake' %}
-    {% elif dependency.get_type() == 'autotools' %}
-{% endif %}
 
 {% for dep in dependency.get_dependencies() %}
     {% if not dep.build_only %}
@@ -43,19 +43,27 @@ MinGW compiled example library.
 %{?mingw_debug_package}
 
 %prep
+{% if dependency.get_main_source().get_type() == 'git' %}
 rm -rf {{ dependency.name }}
 git clone {{ dependency.get_main_source() }}
 cd {{ dependency.name }}
 git submodule update --init
+{% elif dependency.get_main_source().get_type() == 'archive'  %}
+%autosetup -p1 -n {{ dependency.get_main_source().archive_name }}
+{% endif %}
 
 %build
+{% if dependency.get_main_source().get_type() == 'git' %}
 cd {{ dependency.name }}
+{% endif %}
 {% if dependency.get_type() == 'meson' %}
 %mingw_meson
 {% endif %}
 
 %install
+{% if dependency.get_main_source().get_type() == 'git' %}
 cd {{ dependency.name }}
+{% endif %}
 {% if dependency.get_type() == 'meson' %}
 %mingw_ninja -C build_win64 install
 {% endif %}

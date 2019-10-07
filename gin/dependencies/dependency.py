@@ -1,3 +1,22 @@
+#
+# Copyright (c) 2019 Bilal Elmoussaoui.
+#
+# This file is part of Gin
+# (see https://github.com/bilelmoussaoui/gin).
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
 
 import os
 from abc import ABCMeta, abstractmethod
@@ -5,6 +24,7 @@ from xml.etree.ElementTree import ElementTree
 
 from logzero import logger
 
+from gin import config
 from gin.errors import ParseError, UnsupportedDependency
 from gin.container import Container
 from gin.sources import Source
@@ -78,6 +98,7 @@ class Dependency(metaclass=ABCMeta):
         self._dependencies = []
         self._flags = {}
         self._fetch_sources()
+        self._fetch_subdependencies()
         self._fetch_flags()
 
     @property
@@ -87,20 +108,31 @@ class Dependency(metaclass=ABCMeta):
     @is_main.setter
     def is_main(self, new_val):
         self._is_main = new_val
-        if self._is_main:
-            self._fetch_subdependencies()
 
     def prepare(self, container: Container):
         logger.info(f"Preparing {self.name}")
         self._generate_spec(container)
+
+        print(f"{self.name}")
+        for dependency in self.get_dependencies():
+            if dependency.get_type() != DependencyType.SYSTEM:
+                dependency.prepare(container)
+                dependency._generate_spec(container)
+                dependency.build(container)
+
+        # Build the module
+        self.build(container)
+
+    def build(self, container: Container):
         spec_file = f"/data/{self.name}/{self.name}.spec"
         # Install required dependencies
-        container.exec(f"dnf builddep -y {spec_file}")
+        if self.get_dependencies():
+            container.exec(f"dnf builddep -y {spec_file}")
         # Build rpm file
-        container.exec(f"rpmbuild -bb {spec_file} --build-in-place --quiet")
-
-    def build(self):
-        pass
+        if config.ENVIRONMENT == "dev":
+            container.exec(f"rpmbuild -bb {spec_file}")
+        else:
+            container.exec(f"rpmbuild -bb {spec_file} --quiet")
 
     def set_workdir(self, workdir):
         self._workdir = os.path.join(workdir, self.name)
@@ -115,8 +147,7 @@ class Dependency(metaclass=ABCMeta):
         return self._dependencies
 
     def get_main_source(self):
-        if self.is_main:  # Main module source
-            return self._sources[0]
+        return self._sources[0]
 
     def get_sources(self):
         if self._type == DependencyType.SYSTEM:
@@ -144,8 +175,9 @@ class Dependency(metaclass=ABCMeta):
 
     def _fetch_subdependencies(self):
         tree = self._tree.find('dependencies')
-        dependencies = find_dependencies(tree)
-        self._dependencies = dependencies
+        if tree:
+            dependencies = find_dependencies(tree)
+            self._dependencies = dependencies
 
     def _fetch_sources(self):
         sources = find_sources(self._tree)
@@ -180,8 +212,3 @@ class Dependency(metaclass=ABCMeta):
             pkg_obj.write(spec_content)
             logger.info(
                 f"Spec file for {self.name} generated at {spec_output}")
-
-        if self.is_main:
-            for dependency in self.get_dependencies():
-                if dependency.get_type() != DependencyType.SYSTEM:
-                    dependency.generate_spec()

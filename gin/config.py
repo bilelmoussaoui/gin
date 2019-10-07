@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 #
 # Copyright (c) 2019 Bilal Elmoussaoui.
 #
@@ -18,14 +17,4 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
-from os import environ, path
-from subprocess import call
-
-if not environ.get('DESTDIR', ''):
-    PREFIX = environ.get('MESON_INSTALL_PREFIX', '/usr/local')
-    DATA_DIR = path.join(PREFIX, 'share')
-    print('Updating icon cache...')
-    call(['gtk-update-icon-cache', '-qtf', path.join(DATA_DIR, 'icons/hicolor')])
-    print("Updating mime info...")
-    call(["update-mime-database", path.join(DATA_DIR, 'mime')])
+ENVIRONMENT = "dev"

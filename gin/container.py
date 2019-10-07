@@ -1,3 +1,22 @@
+#
+# Copyright (c) 2019 Bilal Elmoussaoui.
+#
+# This file is part of Gin
+# (see https://github.com/bilelmoussaoui/gin).
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Lesser General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Lesser General Public License for more details.
+#
+# You should have received a copy of the GNU Lesser General Public License
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+#
 """
     Docker container helper utilitues
 """
@@ -51,8 +70,6 @@ class Container:
         return self._mingw_packages
 
     def run(self):
-        print("workdir")
-        print(self._workdir)
         # Before running the container, let's remove the image in case it's already exists
         subprocess.run(["docker", "rm", "gin", "-f"])
 
@@ -69,27 +86,30 @@ class Container:
         logger.debug(f"Container is running: {self._id}")
         self._start()
 
-    def exec(self, command, get_output=False):
+    def exec(self, command, **kwargs):
         _cmd = [self._runner, "exec", "-it", "gin"]
         _cmd.extend(command.split(" "))
 
         logger.info(f"Running command: {' '.join(_cmd)}")
 
-        if get_output:
+        if kwargs.get("get_output"):
             output = subprocess.check_output(_cmd)
             return output.decode("utf-8")
         else:
-            subprocess.run(_cmd)
+            if kwargs.get("quiet"):
+                subprocess.run(_cmd, stdout=subprocess.PIPE)
+            else:
+                subprocess.run(_cmd)
 
     def stop(self):
         subprocess.run([
             self._runner, "stop", "gin"
-        ])
+        ], stdout=subprocess.PIPE)
 
     def _start(self):
         subprocess.run([
             self._runner, "start", "gin"
-        ])
+        ], stdout=subprocess.PIPE)
 
     def _fetch_mingw_packages(self):
         """
