@@ -92,7 +92,7 @@ class Dependency(metaclass=ABCMeta):
 
     def prepare(self, container: Container):
         logger.info(f"Preparing {self.name}")
-        self._generate_spec()
+        self._generate_spec(container)
         spec_file = f"/data/{self.name}/{self.name}.spec"
         # Install required dependencies
         container.exec(f"dnf builddep -y {spec_file}")
@@ -170,14 +170,16 @@ class Dependency(metaclass=ABCMeta):
                 if dependency.get_type() != DependencyType.SYSTEM:
                     dependency.generate_pkgbuild()
 
-    def _generate_spec(self):
+    def _generate_spec(self, container: Container):
         pkg_template = template_env.get_template("mingw.spec.in")
-        spec_content = pkg_template.render(dependency=self)
+        spec_content = pkg_template.render(
+            dependency=self, mingw_packages=container.get_mingw_packages())
         spec_output = os.path.join(self._workdir, f"{self.name}.spec")
 
         with open(spec_output, 'w') as pkg_obj:
             pkg_obj.write(spec_content)
-            logger.info(f"Spec file for {self.name} generated at {spec_output}")
+            logger.info(
+                f"Spec file for {self.name} generated at {spec_output}")
 
         if self.is_main:
             for dependency in self.get_dependencies():
