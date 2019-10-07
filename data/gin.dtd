@@ -72,12 +72,12 @@
 <!-- MSYS package -->
 <!ELEMENT system (cleanups*) >
 <!ATTLIST system
-   name       ID           #REQUIRED
+   name       CDATA           #REQUIRED
    build-only (true|false) "false"
 >
 
 <!-- Meson project -->
-<!ELEMENT meson ((git|archive), cleanups*, exports*, dependencies*, flag*) >
+<!ELEMENT meson ((git|archive), flag*, cleanups*, exports*, dependencies*) >
 <!ATTLIST meson
    name       ID           #REQUIRED
    build-only (true|false) "false"

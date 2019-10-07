@@ -30,7 +30,7 @@
         <archive url="https://download.gnome.org/sources/gtksourceview/4.4/gtksourceview-4.4.0.tar.xz" sha-256="9ddb914aef70a29a66acd93b4f762d5681202e44094d2d6370e51c9e389e689a" />
         <flag name="gir">false</flag>
         <flag name="vapi">false</flag>
-        <dependencies>
+       <dependencies>
           <system name="glib2" build-only="true" />
           <system name="gtk3" build-only="true" />
           <system name="libxml2" build-only="true" />
