@@ -48,10 +48,14 @@ class Container:
         self._fetch_mingw_packages()
 
     def get_mingw_packages(self):
-        print(self._mingw_packages)
         return self._mingw_packages
 
     def run(self):
+        print("workdir")
+        print(self._workdir)
+        # Before running the container, let's remove the image in case it's already exists
+        subprocess.run(["docker", "rm", "gin", "-f"])
+
         container_id = subprocess.check_output([
             self._runner, "run",
             "-it", "-d",

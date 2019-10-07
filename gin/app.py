@@ -17,7 +17,6 @@ class Gin:
     def __init__(self):
         self._workdir = tempfile.TemporaryDirectory(prefix="gin").name
         # This will run generate_pkgbuild on dependencies too
-        self._container = Container(self._workdir)
 
     def prepare(self):
         self._project.module.prepare(self._container)
@@ -31,6 +30,7 @@ class Gin:
         if not self._manifest.exists():
             raise ManifestNotFound(f"Manifest {manifest} not found")
         self._workdir = os.path.join(self._manifest.parent, ".gin")
+        self._container = Container(self._workdir)
         self._parse()
 
     def run(self):
