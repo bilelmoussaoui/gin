@@ -1,7 +1,7 @@
 _pkgname={{ dependency.name }}
 pkgbase=mingw-w64-${_pkgname}
 pkgname=${MINGW_PACKAGE_PREFIX}-${_pkgname}
-pkgver={{ version }}
+pkgver=1
 pkgrel=1
 arch=( "any" )
 depends=(
@@ -15,12 +15,16 @@ depends=(
 makedepends=(
   {% for dep in dependency.get_dependencies() %}
     {% if dep.build_only %}
+        {% if dep.name in mingw_packages %}
     "${MINGW_PACKAGE_PREFIX}-{{ dep.name }}"
+        {% else %}
+    "{{ dep.name }}"
+        {% endif %}
     {% endif %}
   {% endfor %}
   {% if dependency.get_type() == 'meson' %}
-    "${MINGW_PACKAGE_PREFIX}-meson"
-    "${MINGW_PACKAGE_PREFIX}-ninja"
+    "mingw-w64-meson"
+    "ninja"
   {% elif dependency.get_type() == 'cmake' %}
   {% elif dependency.get_type() == 'autotools' %}
   {% endif %}
@@ -44,29 +48,37 @@ sha256sums=(
 )
 
 
+{% if dependency.get_main_source().get_type() == "git" %}
 pkgver() {
     cd "$srcdir/$_pkgname"
-
-  {% if dependency.get_main_source() and dependency.get_main_source().get_type() == "git" %}
     git describe --long --tags | sed "s/\([^-]*-g\)/r\1/;s/-/./g"
-  {% endif %}
 }
+{% endif %}
 
 prepare() {
+
+  {% if dependency.get_main_source().get_type() == "git" %}
     cd "$srcdir/$_pkgname"
-  {% if dependency.get_main_source() and dependency.get_main_source().get_type() == "git" %}
     git submodule update --init
+  {% elif dependency.get_main_source().get_type() == "archive" %}
+    cd "$srcdir/$_pkgname-{{ dependency.get_main_source().version }}"
   {% endif %}
 
   {% if dependency.get_type() == 'meson' %}
-    meson build --prefix="${MINGW_PREFIX}" {{ dependency.get_flags() }}
+    x86_64-w64-mingw32-meson build {{ dependency.get_flags() }}
   {% elif dependency.get_type() == 'cmake' %}
   {% elif dependency.get_type() == 'autotools' %}
   {% endif %}
 }
 
 build() {
+
+  {% if dependency.get_main_source().get_type() == "git" %}
     cd "$srcdir/$_pkgname"
+  {% elif dependency.get_main_source().get_type() == "archive" %}
+    cd "$srcdir/$_pkgname-{{ dependency.get_main_source().version }}"
+  {% endif %}
+  
   {% if dependency.get_type() == 'meson' %}
     ninja -C build
   {% elif dependency.get_type() == 'cmake' %}
@@ -75,9 +87,15 @@ build() {
 }
 
 package() {
+
+  {% if dependency.get_main_source().get_type() == "git" %}
     cd "$srcdir/$_pkgname"
+  {% elif dependency.get_main_source().get_type() == "archive" %}
+    cd "$srcdir/$_pkgname-{{ dependency.get_main_source().version }}"
+  {% endif %}
+  
   {% if dependency.get_type() == 'meson' %}
-    DESTDIR="${pkgdir}${MINGW_PREFIX}" ninja -C build install
+    DESTDIR="${pkgdir}" ninja -C build install
   {% elif dependency.get_type() == 'cmake' %}
   {% elif dependency.get_type() == 'autotools' %}
   {% endif %}

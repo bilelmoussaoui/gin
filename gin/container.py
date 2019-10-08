@@ -65,6 +65,7 @@ class Container:
         self._workdir = workdir
         self.run()
         self._fetch_mingw_packages()
+        print(self._mingw_packages)
 
     def get_mingw_packages(self):
         return self._mingw_packages
@@ -87,7 +88,19 @@ class Container:
         self._start()
 
     def exec(self, command, **kwargs):
-        _cmd = [self._runner, "exec", "-it", "gin"]
+        _cmd = [self._runner, "exec", "-it"]
+
+        cwd = kwargs.get("cwd", "/data")
+        _cmd.extend(["-w", cwd])
+
+        env = kwargs.get("env", {})
+        env["BUILDDIR"] = "/data"
+        env["SRCDEST"] = "/data/srcdest"
+        env["LOGDEST"] = "/data/logdest"
+        for key, val in env.items():
+            _cmd.extend(["-e", f"{key}={val}"])
+
+        _cmd.extend(["--user", "1000", "gin"])
         _cmd.extend(command.split(" "))
 
         logger.info(f"Running command: {' '.join(_cmd)}")
@@ -117,8 +130,7 @@ class Container:
             As each system dependency might not be available as a mingw64 package
             For now we fallback to the default packages, it might cause breakage later.
         """
-        self.exec("dnf update")
-        packages_output = self.exec("dnf search mingw64", get_output=True)
+        packages_output = self.exec("pacman -Ss mingw-w64-", get_output=True)
         # Remove ansi charachters
         # From https://stackoverflow.com/a/45448194
         ansi_regex = r'\x1b(' \
@@ -139,7 +151,7 @@ class Container:
         packages_output = ansi_escape.sub('', packages_output)
         packages = []
         for package in packages_output.split("\n"):
-            if package.startswith("mingw64-"):
-                packages.append(package.split(
-                    ".")[0].strip().replace("mingw64-", ""))
+            if package.startswith("ownstuff/mingw-w64-"):
+                packages.append(package.split()[0].strip().replace(
+                    "ownstuff/mingw-w64-", ""))
         self._mingw_packages = packages

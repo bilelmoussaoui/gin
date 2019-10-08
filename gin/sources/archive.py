@@ -32,8 +32,11 @@ class ArchiveSource(Source):
     sha256: str  # a hash to validate the archive
     archive_name: str  # The filename of the archive
 
+    version: str  # The version, required by PKGBUILD.
+
     def __init__(self, tag):
         Source.__init__(self, tag)
+        self.version = tag.get("version")
         self.url = tag.get("url")
         if not self.url:
             raise MissingAttributeError(

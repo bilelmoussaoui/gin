@@ -111,28 +111,25 @@ class Dependency(metaclass=ABCMeta):
 
     def prepare(self, container: Container):
         logger.info(f"Preparing {self.name}")
-        self._generate_spec(container)
+        self._generate_pkgbuild(container)
 
         print(f"{self.name}")
         for dependency in self.get_dependencies():
             if dependency.get_type() != DependencyType.SYSTEM:
                 dependency.prepare(container)
-                dependency._generate_spec(container)
+                dependency._generate_pkgbuild(container)
                 dependency.build(container)
 
         # Build the module
         self.build(container)
 
     def build(self, container: Container):
-        spec_file = f"/data/{self.name}/{self.name}.spec"
-        # Install required dependencies
-        if self.get_dependencies():
-            container.exec(f"dnf builddep -y {spec_file}")
-        # Build rpm file
-        if config.ENVIRONMENT == "dev":
-            container.exec(f"rpmbuild -bb {spec_file}")
-        else:
-            container.exec(f"rpmbuild -bb {spec_file} --quiet")
+        pkgbuild = f"/data/{self.name}/PKGBUILD"
+        print(pkgbuild)
+        container.exec(f"makepkg -sCLf --noconfirm -p {pkgbuild}",
+                       cwd=f"/data/{self.name}",
+                       env={'MINGW_INSTALLS': 'mingw64', 'PKGDEST': '/data', 'PKGEXT': '.pkg.tar.gz',
+                            'MINGW_PACKAGE_PREFIX': 'mingw-w64'})
 
     def set_workdir(self, workdir):
         self._workdir = os.path.join(workdir, self.name)
@@ -190,17 +187,13 @@ class Dependency(metaclass=ABCMeta):
         for flag in flags:
             self._flags[flag.get('name')] = flag.text
 
-    def _generate_pkgbuild(self, output_dir):
+    def _generate_pkgbuild(self, container: Container):
         pkg_template = template_env.get_template("PKGBUILD.in")
-        pkgbuild_content = pkg_template.render(dependency=self)
+        pkgbuild_content = pkg_template.render(
+            dependency=self, mingw_packages=container.get_mingw_packages())
 
         with open(os.path.join(self._workdir, "PKGBUILD"), 'w') as pkg_obj:
             pkg_obj.write(pkgbuild_content)
-
-        if self.is_main:
-            for dependency in self.get_dependencies():
-                if dependency.get_type() != DependencyType.SYSTEM:
-                    dependency.generate_pkgbuild()
 
     def _generate_spec(self, container: Container):
         pkg_template = template_env.get_template("mingw.spec.in")
@@ -212,3 +205,14 @@ class Dependency(metaclass=ABCMeta):
             pkg_obj.write(spec_content)
             logger.info(
                 f"Spec file for {self.name} generated at {spec_output}")
+
+    def _build_spec(self, container: Container):
+        spec_file = f"/data/{self.name}/{self.name}.spec"
+        # Install required dependencies
+        if self.get_dependencies():
+            container.exec(f"dnf builddep -y {spec_file}")
+        # Build rpm file
+        if config.ENVIRONMENT == "dev":
+            container.exec(f"rpmbuild -bb {spec_file}")
+        else:
+            container.exec(f"rpmbuild -bb {spec_file} --quiet")

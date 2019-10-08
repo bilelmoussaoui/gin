@@ -38,4 +38,4 @@ class GitSource(Source):
         self.tag = tag.get("tag")
 
     def __str__(self):
-        return self.url.rstrip(".git")
+        return f"git+{self.url}"
