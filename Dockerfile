@@ -49,4 +49,11 @@ RUN pacman -S --noconfirm mingw-w64-gcc
 
 # Install Wine
 RUN pacman -S wine winetricks --noconfirm
-RUN su - tester -c "wine wineboot --init && winetricks --unattended dotnet40 dotnet_verifier"
+USER tester
+RUN wine wineboot --init && winetricks --unattended dotnet40 dotnet_verifier
+
+RUN mkdir /home/tester/wix \
+		&& cd /home/tester/wix \
+		&& curl -SL "https://github.com/wixtoolset/wix3/releases/download/wix3112rtm/wix311-binaries.zip" -o wix311-binaries.zip \
+		&& unzip wix311-binaries.zip \
+		&& rm -f wix311-binaries.zip

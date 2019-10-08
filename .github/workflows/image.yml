@@ -1,17 +1,32 @@
 name: Publish Docker
-on:
-    push:
-      paths:
-      - "Dockerfile"
 jobs:
-  build:
+  publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
-    - name:  Publish to Registry
-      uses: peter-evans/dockerhub-description@v2.1.0
-      env:
-        DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        DOCKERHUB_REPOSITORY: bilelmoussaoui/gin64
-        README_FILEPATH: ./README.md
+
+    - name: Publish to Registry
+      uses: elgohr/Publish-Docker-Github-Action@master
+      with:
+        name: bilelmoussaoui/gin64
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    on:
+      push:
+        paths:
+        - "Dockerfile"
+  publish-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name:  Update
+        uses: peter-evans/dockerhub-description@v2.1.0
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKERHUB_REPOSITORY: bilelmoussaoui/gin64
+          README_FILEPATH: ./README.md
+    on:
+      push:
+        paths:
+        - "README.md"
