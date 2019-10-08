@@ -52,6 +52,7 @@
 <!ATTLIST archive
    url     CDATA          #REQUIRED
    sha-256 CDATA          #IMPLIED
+   version CDATA          #IMPLIED
 >
 
 <!-- Patch to apply to (git|archive) -->
