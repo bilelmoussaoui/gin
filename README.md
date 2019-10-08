@@ -28,12 +28,12 @@ Ensure you have installed Gin using `pipenv install --ignore-pipfile --dev` for 
 docker pull docker.io/bilelmoussaoui/gin64
 ```
 
-- Install Gin into a new virtual environnement 
+- Install Gin into a new virtual environnement
 ```
 pipenv run install
 pipenv shell
 ```
 
 ```
-gin init tests/org.gnome.zbrown.Med.gin.xml
+gin init tests/org.gnome.design.Palette.gin.xml
 ```
