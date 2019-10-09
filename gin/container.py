@@ -18,16 +18,13 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 """
-    Docker container helper utilitues
+    Docker container helper utilities
 """
+import re
 import shutil
 import subprocess
-import re
 
-from logzero import logger
-
-# The only contaienr we support.
-CONTAINER_NAME = "docker.io/bilelmoussaoui/gin64"
+from gin.config import CONTAINER_NAME, IMAGE_NAME, logger
 
 
 def get_docker():
@@ -65,14 +62,14 @@ class Container:
         self._workdir = workdir
         self.run()
         self._fetch_mingw_packages()
-        print(self._mingw_packages)
 
     def get_mingw_packages(self):
         return self._mingw_packages
 
     def run(self):
         # Before running the container, let's remove the image in case it's already exists
-        subprocess.run(["docker", "rm", "gin", "-f"])
+        subprocess.run(["docker", "rm", IMAGE_NAME, "-f"],
+                       stdout=subprocess.DEVNULL)
 
         container_id = subprocess.check_output([
             self._runner, "run",
@@ -110,19 +107,19 @@ class Container:
             return output.decode("utf-8")
         else:
             if kwargs.get("quiet"):
-                subprocess.run(_cmd, stdout=subprocess.PIPE)
+                subprocess.run(_cmd, stdout=subprocess.DEVNULL)
             else:
                 subprocess.run(_cmd)
 
     def stop(self):
         subprocess.run([
-            self._runner, "stop", "gin"
-        ], stdout=subprocess.PIPE)
+            self._runner, "stop", IMAGE_NAME
+        ], stdout=subprocess.DEVNULL)
 
     def _start(self):
         subprocess.run([
-            self._runner, "start", "gin"
-        ], stdout=subprocess.PIPE)
+            self._runner, "start", IMAGE_NAME
+        ], stdout=subprocess.DEVNULL)
 
     def _fetch_mingw_packages(self):
         """

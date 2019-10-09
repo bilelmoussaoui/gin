@@ -22,13 +22,11 @@ import os
 from abc import ABCMeta, abstractmethod
 from xml.etree.ElementTree import ElementTree
 
-from logzero import logger
-
 from gin import config
-from gin.errors import ParseError, UnsupportedDependency
+from gin.config import logger, template_env
 from gin.container import Container
+from gin.errors import ParseError, UnsupportedDependency
 from gin.sources import Source
-from gin.template import template_env
 
 from .helper import find_dependencies, find_sources
 
@@ -110,10 +108,9 @@ class Dependency(metaclass=ABCMeta):
         self._is_main = new_val
 
     def prepare(self, container: Container):
-        logger.info(f"Preparing {self.name}")
+        print(f"Preparing {self.name}")
         self._generate_pkgbuild(container)
 
-        print(f"{self.name}")
         for dependency in self.get_dependencies():
             if dependency.get_type() != DependencyType.SYSTEM:
                 dependency.prepare(container)
@@ -125,7 +122,6 @@ class Dependency(metaclass=ABCMeta):
 
     def build(self, container: Container):
         pkgbuild = f"/data/{self.name}/PKGBUILD"
-        print(pkgbuild)
         container.exec(f"makepkg -sCLf --noconfirm -p {pkgbuild}",
                        cwd=f"/data/{self.name}",
                        env={'MINGW_INSTALLS': 'mingw64', 'PKGDEST': '/data', 'PKGEXT': '.pkg.tar.gz',

@@ -17,7 +17,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-
+import os
 from gin.dependencies import Dependency
 
 
@@ -46,6 +46,11 @@ class Project:
         print(f"Project Name: {self.name}")
         print(f"Manufacturer: {self.manufacturer}")
         print(f"Version: {self.version}")
+
+    def bundle(self, bundle, wix_toolset_path):
+        if not wix_toolset_path:
+            # Fallback to our pre-shipped Wix
+            wix_toolset_path = os.path.expanduser("~/wix/")
 
     def set_workdir(self, workdir):
         self._workdir = workdir

@@ -19,6 +19,7 @@
 #
 from abc import ABCMeta
 from xml.etree.ElementTree import ElementTree
+
 from gin.errors import UnsupportedSource
 
 

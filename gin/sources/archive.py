@@ -18,11 +18,12 @@
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
 
-from urllib.parse import urlparse
 import os
+from urllib.parse import urlparse
+
+from gin.errors import MissingAttributeError
 
 from .source import Source, SourceType
-from gin.errors import MissingAttributeError
 
 
 class ArchiveSource(Source):

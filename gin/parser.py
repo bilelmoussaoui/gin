@@ -24,9 +24,9 @@ from pathlib import Path
 from xml.etree.ElementTree import ElementTree
 from xml.etree.ElementTree import ParseError as ElementTreeParseError
 
+from gin.dependencies import find_dependencies
 from gin.errors import ParseError
 from gin.project import Project
-from gin.dependencies import find_dependencies
 
 
 class Parser:

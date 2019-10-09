@@ -18,14 +18,14 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-from pathlib import Path
-import tempfile
 import os
+import tempfile
+from pathlib import Path
 
+from gin.container import Container
 from gin.errors import ManifestNotFound, ParseError
 from gin.parser import Parser
 from gin.project import Project
-from gin.container import Container
 
 
 class Gin:
@@ -38,11 +38,12 @@ class Gin:
         # This will run generate_pkgbuild on dependencies too
 
     def prepare(self):
+        self._project.display()
         self._project.module.prepare(self._container)
-        self._container.stop()
 
-    def build(self):
-        pass
+    def build(self, bundle, wix_path):
+        self._project.bundle(bundle, wix_path)
+        self._container.stop()
 
     def set_manifest(self, manifest):
         self._manifest = Path(manifest)
@@ -51,10 +52,6 @@ class Gin:
         self._workdir = os.path.join(self._manifest.parent, ".gin")
         self._container = Container(self._workdir)
         self._parse()
-
-    def run(self):
-        self._project.display()
-        self._project.module.display()
 
     def _parse(self):
         try:
