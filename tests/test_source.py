@@ -17,11 +17,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-from gin.sources import Source, SourceType
-from gin.errors import MissingAttributeError
-
 from xml.etree import ElementTree
+
 import pytest
+
+from gin.errors import MissingAttributeError
+from gin.sources import Source, SourceType
 
 
 def test_git_passes():

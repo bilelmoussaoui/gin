@@ -23,7 +23,7 @@ RUN chmod -R g+w /data
 RUN echo -e "[options]\nCacheDir=/data/pacman/cache/\n$(cat /etc/pacman.conf)" > /etc/pacman.conf
 # Enable multilib (for wine)
 RUN echo -e "[multilib]\nInclude = /etc/pacman.d/mirrorlist\n$(cat /etc/pacman.conf)" > /etc/pacman.conf
-# Enable a third party repo to get few pre-built mingw-w64 packages 
+# Enable a third party repo to get few pre-built mingw-w64 packages
 RUN echo -e "[ownstuff]\nSigLevel = Optional TrustAll\nServer = https://martchus.no-ip.biz/repo/arch/\$repo/os/\$arch\nServer = https://ftp.f3l.de/~martchus/\$repo/os/\$arch\n$(cat /etc/pacman.conf)" > /etc/pacman.conf
 
 # Update the system
@@ -44,8 +44,8 @@ RUN pacman -Sy --noconfirm --needed base-devel \
                                     svn \
                                     meson \
                                     cmake
-# Install mingw-64 build stuff 
-RUN pacman -S --noconfirm mingw-w64-gcc
+# Install mingw-64 build stuff
+RUN pacman -S --noconfirm mingw-w64-gcc mingw-w64-pkg-config mingw-w64-meson mingw-w64-wine
 
 # Install Wine
 RUN pacman -S wine winetricks --noconfirm

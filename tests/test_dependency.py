@@ -17,11 +17,12 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
-from gin.dependencies import Dependency, DependencyType
-from gin.errors import ParseError
-
 from xml.etree import ElementTree
+
 import pytest
+
+from gin.dependencies import Dependency, DependencyType, SystemDependency
+from gin.errors import ParseError
 
 
 def test_meson_passes():
@@ -45,3 +46,10 @@ def test_meson_fails():
     with pytest.raises(ParseError):
         tag = ElementTree.fromstring('<meson  />')
         Dependency.new_with_type(tag, DependencyType.MESON)
+
+
+def test_system_passes():
+    dependency = SystemDependency.new("meson")
+    assert dependency.name == "meson"
+    with pytest.raises(ParseError):
+        dependency.get_flags()

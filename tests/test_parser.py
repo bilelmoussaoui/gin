@@ -19,9 +19,8 @@
 #
 from pathlib import Path
 
-from gin.parser import Parser
 from gin.dependencies import DependencyType
-
+from gin.parser import Parser
 
 path = Path('./tests/org.gnome.design.Palette.gin.xml')
 parser = Parser(path)
